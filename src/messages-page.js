@@ -41,24 +41,25 @@ export const messagesPage = async () => {
 
   document.title = "Messages - GitHub";
   main.innerHTML = `
-          <div style="position: relative; height: 80vh;">
-              <button id="sign-out-github" style="position: absolute; top: 16px; right: 16px; padding: 8px 16px; font-size: 14px; cursor: pointer; z-index: 10;" class="Button--secondary Button--small Button">Sign out</button>
-              <div style="display: flex; height: 100%; border: 1px solid #ddd;">
-                  <aside style="min-width: 200px; max-width: 250px; border-right: 1px solid #eee; padding: 8px; overflow-y: auto;">
-                      <h3>Conversations</h3>
-                      <ul id="conversation-list" style="list-style: none; padding: 0; margin: 0;"></ul>
-                  </aside>
-                  <section style="flex: 1; padding: 8px; display: flex; flex-direction: column;">
-                      <h3>Messages</h3>
-                      <div id="messages-list" style="flex: 1; overflow-y: auto; border: 1px solid #eee; margin-bottom: 8px; padding: 8px;"></div>
-                      <form id="send-message-form" style="display: flex; gap: 4px;">
-                          <input type="text" id="message-input" placeholder="Type a message..." style="flex: 1;" />
-                          <button type="submit">Send</button>
-                      </form>
-                  </section>
-              </div>
-          </div>
-      `;
+    <div style="position: relative; height: 80vh;">
+      <div style="display: flex; height: calc(100% - 40px); border: 1px solid #ddd;">
+        <aside style="min-width: 200px; max-width: 250px; border-right: 1px solid #eee; padding: 8px; overflow-y: auto;">
+          <h3>Conversations</h3>
+          <ul id="conversation-list" style="list-style: none; padding: 0; margin: 0;"></ul>
+        </aside>
+        <section style="flex: 1; padding: 8px; display: flex; flex-direction: column;">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 8px;">
+          <h3 style="margin: 0;">Messages</h3>
+          <button id="sign-out-github" style="padding: 8px 16px; font-size: 14px; cursor: pointer; z-index: 10; margin-bottom: 8px;" class="Button--secondary Button--small Button">Sign out</button>
+        </div>
+        <div id="messages-list" style="flex: 1; overflow-y: auto; border: 1px solid #eee; margin-bottom: 8px; padding: 8px;"></div>
+        <form id="send-message-form" style="display: flex; gap: 4px;">
+          <input type="text" id="message-input" placeholder="Type a message..." style="flex: 1;" />
+          <button type="submit">Send</button>
+        </form>
+      </section>
+    </div>
+  `;
 
   document
     .getElementById("sign-out-github")

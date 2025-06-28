@@ -1,9 +1,9 @@
-const SELECTOR_FOLLOW_FORM =
-  "body > div.logged-in.env-production.page-responsive.page-profile > div.application-main > main > div > div > div.Layout-sidebar > div > div > div.d-flex.flex-column > div.flex-order-1.flex-md-order-none > div > div > span > form:nth-child(1)";
-const SELECTOR_UNFOLLOW_FORM =
-  "body > div.logged-in.env-production.page-responsive.page-profile > div.application-main > main > div > div > div.Layout-sidebar > div > div > div.d-flex.flex-column > div.flex-order-1.flex-md-order-none > div > div > span > form:nth-child(2)";
-const SELECTOR_UNFOLLOW_BUTTON =
-  "body > div.logged-in.env-production.page-responsive.page-profile > div.application-main > main > div > div > div.Layout-sidebar > div > div > div.d-flex.flex-column > div.flex-order-1.flex-md-order-none > div > div > span > form:nth-child(2) > input.btn.btn-block";
+import {
+  SELECTOR_FOLLOW_FORM,
+  SELECTOR_UNFOLLOW_FORM,
+  SELECTOR_UNFOLLOW_BUTTON,
+  SELECTOR_NAV_PR,
+} from "../constants";
 
 export function addProfileButtons() {
     const followForm = document.querySelector(SELECTOR_FOLLOW_FORM);
@@ -41,9 +41,6 @@ export function addProfileButtons() {
         });
     }
 }
-
-const SELECTOR_NAV_PR =
-  "body > div.logged-in.env-production.page-responsive > div.position-relative.header-wrapper.js-header-wrapper > header > div.AppHeader-globalBar > div.AppHeader-globalBar-end > div.AppHeader-actions.position-relative";
 
 export function addNavButton() {
     const navPR = document.querySelector(SELECTOR_NAV_PR);
