@@ -1,9 +1,43 @@
 import { supabase } from "./supabase";
 
+export async function startConversation(currentUserId, otherUserId) {
+    // Check if a conversation already exists between these two users
+    const { data: existingConversations, error: existingError } = await supabase
+        .from('conversations')
+        .select('id, users')
+        .contains('users', [currentUserId])
+        .contains('users', [otherUserId]);
+
+    if (existingError) {
+        console.error('Error checking for existing conversation', existingError);
+        throw existingError;
+    }
+
+    // Filter for conversations with exactly two users to avoid group chat conflicts
+    const privateConversation = existingConversations?.find(c => c.users.length === 2);
+    if (privateConversation) {
+        return privateConversation;
+    }
+
+    // If no conversation exists, create a new one
+    const { data: newConversation, error: newConversationError } = await supabase
+        .from('conversations')
+        .insert([{ users: [currentUserId, otherUserId] }])
+        .select('id')
+        .single();
+
+    if (newConversationError) {
+        console.error('Error creating new conversation', newConversationError);
+        throw newConversationError;
+    }
+
+    return newConversation;
+}
+
 export async function fetchConversations(currentUserId) {
     const { data: conversations, error } = await supabase
         .from("conversations")
-        .select("id, users")
+        .select("id, users, name")
         .contains("users", [currentUserId]);
 
     if (error) {
@@ -41,6 +75,7 @@ export async function fetchConversations(currentUserId) {
 
         return {
             id: conv.id,
+            name: conv.name,
             otherUser: { name, avatar },
             lastMessage: lastMsg,
         };

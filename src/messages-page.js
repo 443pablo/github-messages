@@ -1,8 +1,11 @@
 import { supabase } from "./api/supabase";
-import { fetchConversations } from "./api/conversations";
+import { fetchConversations, startConversation } from "./api/conversations";
 import { sendMessage, onNewMessage, fetchMessages } from "./api/messages";
 import { renderConversationList, handleConversationClick } from "./components/ConversationList";
 import { renderMessages } from "./components/MessagesView";
+import { findUserByUsername } from "./api/users";
+
+globalThis.supabase = supabase;
 
 export const messagesPage = async () => {
   if (location.pathname !== "/messages" && location.pathname !== "/messages/") {
@@ -90,6 +93,40 @@ export const messagesPage = async () => {
       const messages = await fetchMessages(conversationId);
       renderMessages(messages, session.user.id);
   }
+
+  document.getElementById("new-conversation-btn").addEventListener("click", async () => {
+    const username = prompt("Enter the GitHub username of the user you want to message:");
+    if (!username) return;
+
+    if (username.toLowerCase() === session.user.user_metadata.user_name.toLowerCase()) {
+      alert("You cannot start a conversation with yourself.");
+      return;
+    }
+
+    try {
+      const otherUser = await findUserByUsername(username);
+      if (!otherUser) {
+        alert("User not found. Note: usernames are case-sensitive.");
+        return;
+      }
+
+      const conversation = await startConversation(session.user.id, otherUser.id);
+      
+      // Refresh conversation list
+      const newConversations = await fetchConversations(session.user.id);
+      renderConversationList(newConversations);
+
+      // Programmatically click the new conversation to show its messages
+      const conversationElement = document.querySelector(`li[data-conversation-id="${conversation.id}"]`);
+      if (conversationElement) {
+        conversationElement.click();
+      }
+
+    } catch (error) {
+      console.error("Failed to start new conversation:", error);
+      alert("Could not start a new conversation. Please try again.");
+    }
+  });
 
   handleConversationClick(async (conversationId) => {
     currentConversationId = conversationId;

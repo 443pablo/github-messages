@@ -9,7 +9,7 @@ export function renderConversationList(conversations) {
         <li style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; cursor: pointer; transition: background-color 0.2s ease-in-out; border-radius: 6px;" data-conversation-id="${conv.id}">
             <img src="${conv.otherUser.avatar}" alt="avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">
             <div style="flex:1;">
-                <div style="font-weight: bold;">${conv.otherUser.name}</div>
+                <div style="font-weight: bold;">${conv.name ?? conv.otherUser.name}</div>
                 <div style="font-size: 13px; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">${conv.lastMessage}</div>
             </div>
         </li>`
