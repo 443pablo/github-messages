@@ -8,4 +8,10 @@ esbuild.build({
     sourcemap: true
 })
 
+esbuild.build({
+    entryPoints: ["src/hideLoad.ts"],
+    bundle: true,
+    outfile: "dist/hideLoad.js",
+})
+
 console.log("ok!")

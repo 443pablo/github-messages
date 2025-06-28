@@ -4,20 +4,20 @@ import { sendMessage, onNewMessage, fetchMessages } from "./api/messages";
 import { renderConversationList, handleConversationClick } from "./components/ConversationList";
 import { renderMessages } from "./components/MessagesView";
 import { findUserByUsername } from "./api/users";
-
-globalThis.supabase = supabase;
+import { MAIN_CONTAINER } from "./constants";
 
 export const messagesPage = async () => {
   if (location.pathname !== "/messages" && location.pathname !== "/messages/") {
     return;
   }
 
+  
+
   const {
     data: { session },
   } = await supabase.auth.getSession();
-  const main = document.querySelector(
-    "body > div.logged-in.env-production.page-responsive > div.application-main > main"
-  );
+  const main = document.querySelector(MAIN_CONTAINER);
+  main.style.opacity = "1";
 
   if (!session) {
     document.title = "Messages - GitHub";
