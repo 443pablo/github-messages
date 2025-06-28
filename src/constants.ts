@@ -11,9 +11,3 @@ export const SELECTOR_UNFOLLOW_BUTTON =
 // nav messages icon
 export const SELECTOR_NAV_PR =
   "body > div.logged-in.env-production.page-responsive > div.position-relative.header-wrapper.js-header-wrapper > header > div.AppHeader-globalBar > div.AppHeader-globalBar-end > div.AppHeader-actions.position-relative";
-
-export const followForm = document.querySelector(SELECTOR_FOLLOW_FORM);
-export const followButton = followForm?.children[1]; //child 0 is an invisible authenticity token input
-export const unFollowForm = document.querySelector(SELECTOR_UNFOLLOW_FORM);
-export const unFollowButton = document.querySelector(SELECTOR_UNFOLLOW_BUTTON);
-export const navPR = document.querySelector(SELECTOR_NAV_PR);
