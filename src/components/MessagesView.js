@@ -1,4 +1,4 @@
-export function renderMessages(messages, currentUserId) {
+export function renderMessages(messages, currentUserId, conversation) {
     const messagesList = document.getElementById("messages-list");
     if (!messages) {
         messagesList.innerHTML = "";

@@ -14,3 +14,18 @@ export async function findUserByUsername(username) {
 
     return data;
 }
+
+export async function getUserProfile(userId) {
+    const { data, error } = await supabase
+        .from("profiles")
+        .select("id, name, avatar_url")
+        .eq("id", userId)
+        .single();
+
+    if (error) {
+        console.error("Error fetching user profile", error);
+        throw error;
+    }
+
+    return data;
+}

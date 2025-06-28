@@ -83,3 +83,18 @@ export async function fetchConversations(currentUserId) {
 
     return conversationDetails.filter(Boolean);
 }
+
+export async function getConversationByID(conversationId) {
+    const { data: conversation, error } = await supabase
+        .from("conversations")
+        .select("id, users, name")
+        .eq("id", conversationId)
+        .single();
+        
+    if (error) {
+        console.error("Error fetching conversation by ID", error);
+        return null;
+    }
+
+    return conversation;
+}

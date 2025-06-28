@@ -1,10 +1,11 @@
 import { supabase } from "./api/supabase";
-import { fetchConversations, startConversation } from "./api/conversations";
+import { fetchConversations, startConversation, getConversationByID } from "./api/conversations";
 import { sendMessage, onNewMessage, fetchMessages } from "./api/messages";
 import { renderConversationList, handleConversationClick } from "./components/ConversationList";
 import { renderMessages } from "./components/MessagesView";
 import { findUserByUsername } from "./api/users";
 import { MAIN_CONTAINER } from "./constants";
+import { showCustomAlert, showCustomPrompt, isDarkMode } from "./utils";
 
 export const messagesPage = async () => {
   if (location.pathname !== "/messages" && location.pathname !== "/messages/") {
@@ -44,9 +45,8 @@ export const messagesPage = async () => {
 
   document.title = "Messages - GitHub";
 
-  const isDarkMode = document.documentElement.getAttribute('data-color-mode') === 'dark';
-  const borderColor = isDarkMode ? '#30363d' : '#ddd';
-  const subtleBorderColor = isDarkMode ? '#30363d' : '#eee';
+  const borderColor = isDarkMode() ? '#30363d' : '#ddd';
+  const subtleBorderColor = isDarkMode() ? '#30363d' : '#eee';
 
   main.innerHTML = `
     <div style="position: relative; height: 80vh;">
@@ -70,7 +70,7 @@ export const messagesPage = async () => {
         <div id="messages-list" style="flex: 1; overflow-y: auto; border: 1px solid ${subtleBorderColor}; margin-bottom: 8px; padding: 8px;"></div>
         <form id="send-message-form" style="display: flex; gap: 4px;">
           <input type="text" id="message-input" placeholder="Type a message..." style="flex: 1;" />
-          <button type="submit">Send</button>
+          <button class="Button--secondary Button--small Button" type="submit">Send</button>
         </form>
       </section>
     </div>
@@ -91,22 +91,29 @@ export const messagesPage = async () => {
 
   async function showMessages(conversationId) {
       const messages = await fetchMessages(conversationId);
-      renderMessages(messages, session.user.id);
+      const conv = await getConversationByID(conversationId);
+      const usersInConversation = new Map();
+      conv.users.forEach(userId => {
+        usersInConversation.set(userId, null);
+        
+      });
+
+      renderMessages(messages, session.user.id, conv);
   }
 
   document.getElementById("new-conversation-btn").addEventListener("click", async () => {
-    const username = prompt("Enter the GitHub username of the user you want to message:");
+    const username = await showCustomPrompt("Enter the GitHub username of the user you want to message:");
     if (!username) return;
 
     if (username.toLowerCase() === session.user.user_metadata.user_name.toLowerCase()) {
-      alert("You cannot start a conversation with yourself.");
+      await showCustomAlert("You cannot start a conversation with yourself.");
       return;
     }
 
     try {
       const otherUser = await findUserByUsername(username);
       if (!otherUser) {
-        alert("User not found. Note: usernames are case-sensitive.");
+        await showCustomAlert("User not found. Note: usernames are case-sensitive.");
         return;
       }
 
@@ -124,7 +131,7 @@ export const messagesPage = async () => {
 
     } catch (error) {
       console.error("Failed to start new conversation:", error);
-      alert("Could not start a new conversation. Please try again.");
+      await showCustomAlert("Could not start a new conversation. Please try again.");
     }
   });
 
