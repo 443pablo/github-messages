@@ -40,11 +40,23 @@ export const messagesPage = async () => {
   }
 
   document.title = "Messages - GitHub";
+
+  const isDarkMode = document.documentElement.getAttribute('data-color-mode') === 'dark';
+  const borderColor = isDarkMode ? '#30363d' : '#ddd';
+  const subtleBorderColor = isDarkMode ? '#30363d' : '#eee';
+
   main.innerHTML = `
     <div style="position: relative; height: 80vh;">
-      <div style="display: flex; height: calc(100% - 40px); border: 1px solid #ddd;">
-        <aside style="min-width: 200px; max-width: 250px; border-right: 1px solid #eee; padding: 8px; overflow-y: auto;">
-          <h3>Conversations</h3>
+      <div style="display: flex; height: calc(100% - 40px); border: 1px solid ${borderColor};border-radius:15px;margin:20px;">
+        <aside style="min-width: 200px; max-width: 250px; border-right: 1px solid ${subtleBorderColor}; padding: 8px; overflow-y: auto;">
+          <div style="display: flex; align-items: center; justify-content: space-between;">
+            <h3>Conversations</h3>
+            <button id="new-conversation-btn" style="background-color: #0969da; border: none; padding: 4px; cursor: pointer; vertical-align: middle; border-radius: 6px; line-height: 1;">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16" style="display: inline-block; vertical-align: middle;">
+                <path fill="white" d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2Z"></path>
+              </svg>
+            </button>
+          </div>
           <ul id="conversation-list" style="list-style: none; padding: 0; margin: 0;"></ul>
         </aside>
         <section style="flex: 1; padding: 8px; display: flex; flex-direction: column;">
@@ -52,7 +64,7 @@ export const messagesPage = async () => {
           <h3 style="margin: 0;">Messages</h3>
           <button id="sign-out-github" style="padding: 8px 16px; font-size: 14px; cursor: pointer; z-index: 10; margin-bottom: 8px;" class="Button--secondary Button--small Button">Sign out</button>
         </div>
-        <div id="messages-list" style="flex: 1; overflow-y: auto; border: 1px solid #eee; margin-bottom: 8px; padding: 8px;"></div>
+        <div id="messages-list" style="flex: 1; overflow-y: auto; border: 1px solid ${subtleBorderColor}; margin-bottom: 8px; padding: 8px;"></div>
         <form id="send-message-form" style="display: flex; gap: 4px;">
           <input type="text" id="message-input" placeholder="Type a message..." style="flex: 1;" />
           <button type="submit">Send</button>
