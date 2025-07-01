@@ -90,15 +90,17 @@ export const messagesPage = async () => {
   renderConversationList(conversations);
 
   async function showMessages(conversationId) {
-      const messages = await fetchMessages(conversationId);
-      const conv = await getConversationByID(conversationId);
-      const usersInConversation = new Map();
-      conv.users.forEach(userId => {
-        usersInConversation.set(userId, null);
-        
-      });
-
-      renderMessages(messages, session.user.id, conv);
+    const messagesList = document.getElementById("messages-list");
+    // loading spinner
+    messagesList.innerHTML = `<div style="display: flex; justify-content: center; align-items: center; height: 100%;"><svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" stroke="#0969da"><g fill="none" fill-rule="evenodd"><g transform="translate(2 2)" stroke-width="3"><circle stroke-opacity=".3" cx="18" cy="18" r="18"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s" repeatCount="indefinite"/></path></g></g></svg></div>`;
+    
+    const messages = await fetchMessages(conversationId);
+    const conv = await getConversationByID(conversationId);
+    const usersInConversation = new Map();
+    conv.users.forEach(userId => {
+      usersInConversation.set(userId, null);
+    });
+    renderMessages(messages, session.user.id, conv);
   }
 
   document.getElementById("new-conversation-btn").addEventListener("click", async () => {
