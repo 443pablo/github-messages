@@ -11,6 +11,10 @@
         "16": "./comment-16.png",
         "24": "./comment-24.png"
     },
+    "optional_permissions": [
+        "notifications"
+    ],
+    "omnibox": {"keyword": "gh" },
     "content_scripts": [
         {
             "matches": ["https://github.com/messages"],
