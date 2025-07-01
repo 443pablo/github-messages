@@ -9,7 +9,7 @@ esbuild.build({
 })
 
 esbuild.build({
-    entryPoints: ["src/hideLoad.ts"],
+    entryPoints: ["src/pages/hideLoad.ts"],
     bundle: true,
     outfile: "dist/hideLoad.js",
 })

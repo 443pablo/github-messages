@@ -1,4 +1,4 @@
-import { messagesPage } from "./messages-page";
+import { messagesPage } from "./pages/messages";
 import { addProfileButtons, addNavButton } from "./components/ProfileButtons";
 
 (async () => {

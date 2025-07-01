@@ -1,11 +1,11 @@
-import { supabase } from "./api/supabase";
-import { fetchConversations, startConversation, getConversationByID } from "./api/conversations";
-import { sendMessage, onNewMessage, fetchMessages } from "./api/messages";
-import { renderConversationList, handleConversationClick } from "./components/ConversationList";
-import { renderMessages } from "./components/MessagesView";
-import { findUserByUsername } from "./api/users";
-import { MAIN_CONTAINER } from "./constants";
-import { showCustomAlert, showCustomPrompt, isDarkMode } from "./utils";
+import { supabase } from "../api/supabase";
+import { fetchConversations, startConversation, getConversationByID } from "../api/conversations";
+import { sendMessage, onNewMessage, fetchMessages } from "../api/messages";
+import { renderConversationList, handleConversationClick } from "../components/ConversationList";
+import { renderMessages } from "../components/MessagesView";
+import { findUserByUsername } from "../api/users";
+import { MAIN_CONTAINER } from "../constants";
+import { showCustomAlert, showCustomPrompt, isDarkMode } from "../utils";
 
 export const messagesPage = async () => {
   if (location.pathname !== "/messages" && location.pathname !== "/messages/") {
