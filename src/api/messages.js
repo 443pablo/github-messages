@@ -41,3 +41,29 @@ export async function fetchMessages(conversationId) {
     if (error) throw error;
     return messages;
 }
+
+export class Message {
+    constructor({ id, conversation_id, sender_id, content, created_at }) {
+        this.id = id;
+        this.conversation_id = conversation_id;
+        this.sender_id = sender_id;
+        this.content = content;
+        this.created_at = created_at;
+    }
+
+    static async send(conversationId, senderId, content) {
+        const { data, error } = await supabase
+            .from("messages")
+            .insert([
+                {
+                    conversation_id: conversationId,
+                    sender_id: senderId,
+                    content,
+                },
+            ])
+            .select()
+            .single();
+        if (error) throw error;
+        return new Message(data);
+    }
+}

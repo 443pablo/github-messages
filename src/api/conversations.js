@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { Message } from "./messages";
 
 export async function startConversation(currentUserId, otherUserId) {
     // Check if a conversation already exists between these two users
@@ -98,3 +99,67 @@ export async function getConversationByID(conversationId) {
 
     return conversation;
 }
+
+export class Conversation {
+    constructor(conversationId, currentUserId) {
+        this.id = conversationId;
+        this.currentUserId = currentUserId;
+        this.users = [];
+        this.name = null;
+        this.otherUser = null;
+        this.messages = [];
+    }
+
+    async load() {
+        const conversationData = await getConversationByID(this.id);
+        if (!conversationData) {
+            throw new Error("Conversation not found");
+        }
+        this.users = conversationData.users;
+        this.name = conversationData.name;
+
+        const otherUserId = this.users.find(uid => uid !== this.currentUserId);
+        if (otherUserId) {
+            const { data: profile } = await supabase
+                .from("profiles")
+                .select("name, avatar_url")
+                .eq("id", otherUserId)
+                .single();
+            this.otherUser = {
+                id: otherUserId,
+                name: profile?.name || "Unknown",
+                avatar: profile?.avatar_url || "https://github.com/ghost.png"
+            };
+        }
+
+        await this.fetchMessages();
+    }
+
+    async fetchMessages() {
+        const { data, error } = await supabase
+            .from("messages")
+            .select("id, conversation_id, sender_id, content, created_at")
+            .eq("conversation_id", this.id)
+            .order("created_at", { ascending: true });
+
+        if (error) {
+            console.error("Error fetching messages", error);
+            return;
+        }
+        this.messages = data ? data.map(m => new Message(m)) : [];
+    }
+
+    async sendMessage(content) {
+        const newMessage = await Message.send(this.id, this.currentUserId, content);
+        this.messages.push(newMessage);
+        return newMessage;
+    }
+
+    static async start(currentUserId, otherUserId) {
+        const conversationData = await startConversation(currentUserId, otherUserId);
+        const conversation = new Conversation(conversationData.id, currentUserId);
+        await conversation.load();
+        return conversation;
+    }
+}
+
