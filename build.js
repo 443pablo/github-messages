@@ -11,7 +11,15 @@ esbuild.build({
 esbuild.build({
     entryPoints: ["src/pages/hideLoad.ts"],
     bundle: true,
+    minify: true,
     outfile: "dist/hideLoad.js",
+})
+
+esbuild.build({
+    entryPoints: ["src/background/index.js"],
+    bundle: true,
+    minify: true,
+    outfile: "dist/background.js",
 })
 
 console.log("ok!")

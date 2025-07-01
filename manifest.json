@@ -1,6 +1,6 @@
 {
     "name": "Github Messages",
-    "description": "A messaging system for Github",
+    "description": "A messaging system for Github. Message anyone on GitHub with ease with a native user interface.",
     "version": "0.0.1",
     "manifest_version": 3,
     "action": {
@@ -8,8 +8,17 @@
         "default_icon": "./comment-16.png"
     },
     "icons": {
-        "16": "./comment-16.png",
-        "24": "./comment-24.png"
+        "16": "./icons/black/16.png",
+        "32": "./icons/black/32.png",
+        "64": "./icons/black/64.png",
+        "128": "./icons/black/128.png"
+    },
+    "host_permissions": [
+        "https://github.com/*"
+    ],
+    "background": {
+        "service_worker": "dist/background.js",
+        "type": "module"
     },
     "optional_permissions": [
         "notifications"

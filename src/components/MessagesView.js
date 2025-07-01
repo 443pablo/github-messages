@@ -1,13 +1,15 @@
+import { renderContextMenu } from "./context/Message";
+
 export function renderMessages(messages, currentUserId, conversation) {
-    const messagesList = document.getElementById("messages-list");
-    if (!messages) {
-        messagesList.innerHTML = "";
-        return;
-    }
-    messagesList.innerHTML = messages
-        .map(
-            (msg) => `
-              <div style="margin-bottom: 8px;">
+  const messagesList = document.getElementById("messages-list");
+  if (!messages) {
+    messagesList.innerHTML = "";
+    return;
+  }
+  messagesList.innerHTML = messages
+    .map(
+      (msg, idx) => `
+              <div class="message-item" data-message-idx="${idx}" style="margin-bottom: 8px; position: relative;">
                   <span style="font-weight: bold; color: #555;">${
                     msg.sender_id === currentUserId ? "You" : "Them"
                   }:</span>
@@ -17,7 +19,10 @@ export function renderMessages(messages, currentUserId, conversation) {
                   ).toLocaleTimeString()}</span>
               </div>
           `
-        )
-        .join("");
-    messagesList.scrollTop = messagesList.scrollHeight;
+    )
+    .join("");
+
+  renderContextMenu(messagesList);
+
+  messagesList.scrollTop = messagesList.scrollHeight;
 }
