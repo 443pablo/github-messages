@@ -7,6 +7,9 @@ esbuild.build({
     bundle: true,
     outfile: "dist/index.js",
     minify: true,
+    loader: {
+        ".css": "text"
+    },
     sourcemap: !isProd
 });
 

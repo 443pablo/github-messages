@@ -1,5 +1,5 @@
 import { isDarkMode } from "../../utils";
-
+import css from "./context-menu.css";
 export function renderContextMenu(messagesList) {
   if (!messagesList) return;
 
@@ -17,13 +17,12 @@ export function renderContextMenu(messagesList) {
   menu.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
   menu.style.zIndex = "1000";
   menu.innerHTML = `
-      <div style="padding: 8px 16px; cursor: pointer; color: ${
-        dark ? "#eee" : "#222"
-      }; background: transparent;" id="context-copy">Copy</div>
-      <div style="padding: 8px 16px; cursor: pointer; color: ${
-        dark ? "#eee" : "#222"
-      }; background: transparent;" id="context-delete">Delete</div>
-    `;
+  <style>
+    ${css}
+    </style>
+    <div class="context-menu-item" id="context-copy">Copy</div>
+    <div class="context-menu-item delete" id="context-delete">Delete</div>
+  `;
   document.body.appendChild(menu);
 
   // Hide menu on click elsewhere
