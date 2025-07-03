@@ -6,6 +6,14 @@ import {
 } from "../constants";
 
 export function addProfileButtons() {
+    let USERNAME = location.pathname;
+    if (USERNAME.startsWith("/")) {
+        USERNAME = USERNAME.slice(1);
+    }
+    if (USERNAME.endsWith("/")) {
+        USERNAME = USERNAME.slice(0, -1);
+    }
+
     const followForm = document.querySelector(SELECTOR_FOLLOW_FORM);
     const unFollowForm = document.querySelector(SELECTOR_UNFOLLOW_FORM);
 
@@ -34,10 +42,16 @@ export function addProfileButtons() {
 
         messageButton.addEventListener("click", (event) => {
             event.preventDefault();
+            //alert(`You clicked the message button for ${USERNAME}`);
+
+            location.href = `/messages?to=${USERNAME}`;
         });
 
         messageButtonUnfollow.addEventListener("click", (event) => {
             event.preventDefault();
+            //alert(`You clicked the message button for ${USERNAME}`);
+
+            location.href = `/messages?to=${USERNAME}`;
         });
     }
 }

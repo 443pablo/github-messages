@@ -12,7 +12,7 @@ export class Extension {
       return;
     }
 
-    console.log(window.matchMedia("(prefers-color-scheme: dark)").matches)
+    //console.log(window.matchMedia("(prefers-color-scheme: dark)").matches)
 
     if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
       b.runtime.sendMessage({ scheme: "dark" });
