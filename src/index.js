@@ -5,7 +5,7 @@ import { Extension } from "./extension";
 (async () => {
   const extension = new Extension();
   await extension.init();
-  
+
   addProfileButtons();
   addNavButton();
   await messagesPage();

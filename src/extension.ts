@@ -11,6 +11,20 @@ export class Extension {
       console.warn("what are you doing running this as a userscript?? ok lol");
       return;
     }
+
+    console.log(window.matchMedia("(prefers-color-scheme: dark)").matches)
+
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      b.runtime.sendMessage({ scheme: "dark" });
+    } else {
+      b.runtime.sendMessage({ scheme: "light" });
+    }
+
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        b.runtime.sendMessage({ scheme: e.matches ? "dark" : "light" });
+      });
   }
 
   async getNotificationPermission(): Promise<boolean> {
