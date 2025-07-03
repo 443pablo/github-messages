@@ -20,3 +20,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         });
     }
 });
+
+chrome.action.onClicked.addListener(
+  function (tab) {
+    console.log('Icon clicked', tab);
+    chrome.tabs.create({url: "https://github.com/messages"})
+  }
+);

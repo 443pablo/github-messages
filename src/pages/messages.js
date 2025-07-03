@@ -69,7 +69,7 @@ export const messagesPage = async () => {
         </div>
         <div id="messages-list" style="flex: 1; overflow-y: auto; border: 1px solid ${subtleBorderColor}; margin-bottom: 8px; padding: 8px;"></div>
         <form id="send-message-form" style="display: flex; gap: 4px;">
-          <input type="text" id="message-input" placeholder="Type a message..." style="flex: 1;" class="form-control" />
+          <input autocomplete="off" type="text" id="message-input" placeholder="Type a message..." style="flex: 1;" class="form-control" />
           <button class="Button--secondary Button--small Button" type="submit">Send</button>
         </form>
       </section>
