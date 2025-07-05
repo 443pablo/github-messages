@@ -129,7 +129,7 @@ export const messagesPage = async () => {
       </div>
     `;
 
-    const username = await showCustomPrompt("Enter the GitHub username of the user you want to message:", { html: suggestionsHtml });
+    const username = await showCustomPrompt({ text: "Enter the GitHub username of the user you want to message:", html: suggestionsHtml });
     if (!username) return;
 
     if (username.toLowerCase() === session.user.user_metadata.user_name.toLowerCase()) {

@@ -25,7 +25,6 @@ export function renderContextMenu(messagesList) {
   `;
   document.body.appendChild(menu);
 
-  // Hide menu on click elsewhere
   document.addEventListener("click", () => {
     menu.style.display = "none";
   });

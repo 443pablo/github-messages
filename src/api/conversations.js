@@ -2,7 +2,7 @@ import { supabase } from "./supabase";
 import { Message } from "./messages";
 
 export async function startConversation(currentUserId, otherUserId) {
-    // Check if a conversation already exists between these two users
+    // check if convo already exists
     const { data: existingConversations, error: existingError } = await supabase
         .from('conversations')
         .select('id, users')
@@ -14,13 +14,12 @@ export async function startConversation(currentUserId, otherUserId) {
         throw existingError;
     }
 
-    // Filter for conversations with exactly two users to avoid group chat conflicts
+    // filter thru convos to avoid issues with gcs
     const privateConversation = existingConversations?.find(c => c.users.length === 2);
     if (privateConversation) {
         return privateConversation;
     }
 
-    // If no conversation exists, create a new one
     const { data: newConversation, error: newConversationError } = await supabase
         .from('conversations')
         .insert([{ users: [currentUserId, otherUserId] }])
