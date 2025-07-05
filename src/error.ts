@@ -8,9 +8,7 @@ export const errorHandler = () => {
   if (error && errorDescription) {
     // decode err
     const decodedDescription = decodeURIComponent(errorDescription);
-    const confirmed = confirm(
-      `Error: ${error}\n\n${decodedDescription}`
-    );
+    const confirmed = confirm({title: "Error: " + error, text: decodedDescription});
 
     // beautify url
     const cleanUrl = new URL(window.location.href);

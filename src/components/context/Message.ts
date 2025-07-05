@@ -1,5 +1,6 @@
 import { isDarkMode } from "../../utils";
-import css from "./context-menu.css";
+//@ts-ignore
+import css from "./context-menu.css"; // esbuild configured to import as txt
 export function renderContextMenu(messagesList) {
   if (!messagesList) return;
 

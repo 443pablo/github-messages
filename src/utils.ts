@@ -134,7 +134,7 @@ class PromptModal extends Modal {
       Object.assign(this.content.style, { width: '448px' });
       
       const config: ModalConfig = {
-        title: typeof params === 'object' && params?.title ? params.title : '',
+        title: typeof params === 'object' ? params.title : undefined,
         text: typeof params === 'string' ? params : params.text,
         html: `
           <form id="prompt-form">
@@ -222,14 +222,14 @@ class ConfirmModal extends Modal {
   }
 }
 
-export const showCustomAlert = (message: string): Promise<void> => {
+export const showCustomAlert = (message: string | ModalConfig): Promise<void> => {
   return new AlertModal().show(message);
 };
 
-export const showCustomPrompt = (promptMessage: string): Promise<string | null> => {
+export const showCustomPrompt = (promptMessage: string |ModalConfig): Promise<string | null> => {
   return new PromptModal().show(promptMessage);
 };
 
-export const showCustomConfirm = (message: string): Promise<boolean> => {
+export const showCustomConfirm = (message: string | ModalConfig): Promise<boolean> => {
   return new ConfirmModal().show(message);
 };
