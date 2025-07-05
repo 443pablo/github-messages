@@ -4,7 +4,7 @@
     "version": "0.0.1",
     "manifest_version": 3,
     "action": {
-        "default_icon": "./comment-16.png"
+        "default_icon": "./icons/black/16.png"
     },
     "icons": {
         "16": "./icons/black/16.png",

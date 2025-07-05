@@ -26,6 +26,7 @@ export const showCustomAlert = (message: string): Promise<void> => {
     okButton.textContent = 'OK';
     okButton.className = 'Button--primary Button--medium Button';
     okButton.style.width = '100px';
+    okButton.style.display = 'inline';
 
     okButton.onclick = () => {
       document.body.removeChild(modalOverlay);
@@ -39,7 +40,7 @@ export const showCustomAlert = (message: string): Promise<void> => {
   });
 };
 
-export const showCustomPrompt = (promptMessage: string): Promise<string | null> => {
+export const showCustomPrompt = (promptMessage: string, options?: { html?: string }): Promise<string | null> => {
   return new Promise((resolve) => {
     const isDarkMode = document.documentElement.getAttribute('data-color-mode') === 'dark';
     const modalBgColor = isDarkMode ? '#161b22' : '#ffffff';
@@ -60,34 +61,17 @@ export const showCustomPrompt = (promptMessage: string): Promise<string | null> 
       width: '448px'
     });
 
-    const dummyUsers = [
-      { name: 'John Doe', username: 'johndoe', avatar: 'https://avatars.githubusercontent.com/u/1' },
-      { name: 'Jane Smith', username: 'janesmith', avatar: 'https://avatars.githubusercontent.com/u/2' },
-      { name: 'AI Assistant', username: 'copilot', avatar: 'https://avatars.githubusercontent.com/u/87264559' },
-    ];
-
-    const dummyUsersHtml = dummyUsers.map(user => `
-      <div style="display: flex; align-items: center; padding: 8px; border-radius: 6px; cursor: pointer;"data-username="${user.username}">
-        <img src="${user.avatar}" width="40" height="40" style="border-radius: 50%; margin-right: 12px;">
-        <div>
-          <div style="font-weight: 600;">${user.name}</div>
-          <div style="color: var(--color-fg-muted);">${user.username}</div>
-        </div>
-      </div>
-    `).join('');
+    const additionalContent = options?.html ? options.html : '';
 
     modalContent.innerHTML = `
       <h3 style="margin: 0 0 8px 0;">New Conversation</h3>
       <p style="margin: 0 0 16px 0; color: var(--color-fg-muted);">${promptMessage}</p>
       <form id="prompt-form">
-        <input type="text" id="prompt-input" placeholder="Username" style="width: 100%; margin-bottom: 16px;" class="form-control" />
-        <div style="margin-bottom: 16px; border-top: 1px solid var(--color-border-muted);">
-          <h4 style="margin: 16px 0 8px 0; font-weight: 400; color: var(--color-fg-muted);">Suggestions</h4>
-          ${dummyUsersHtml}
-        </div>
+        <input autocomplete="off" type="text" id="prompt-input" placeholder="Username" style="width: 100%; margin-bottom: 16px;" class="form-control" />
+        ${additionalContent}
         <div style="display: flex; justify-content: flex-end; gap: 8px;">
-          <button type="button" id="prompt-cancel" class="Button--secondary Button--medium Button">Cancel</button>
-          <button type="submit" class="Button--primary Button--medium Button">Start</button>
+          <button type="button" id="prompt-cancel" class="Button--secondary Button--medium Button" style="display:inline;">Cancel</button>
+          <button type="submit" class="Button--primary Button--medium Button" style="display:inline;">Start</button>
         </div>
       </form>
     `;
@@ -115,5 +99,60 @@ export const showCustomPrompt = (promptMessage: string): Promise<string | null> 
         close(el.dataset.username!);
       });
     });
+  });
+};
+
+export const showCustomConfirm = (message: string): Promise<boolean> => {
+  return new Promise((resolve) => {
+    const modalBgColor = isDarkMode() ? '#161b22' : '#ffffff';
+    const borderColor = isDarkMode() ? '#30363d' : '#d0d7de';
+
+    const modalOverlay = document.createElement('div');
+    modalOverlay.id = 'custom-confirm-overlay';
+    Object.assign(modalOverlay.style, {
+      position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
+      backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center',
+      justifyContent: 'center', zIndex: '1000', backdropFilter: 'blur(3px)'
+    });
+
+    const modalContent = document.createElement('div');
+    Object.assign(modalContent.style, {
+      backgroundColor: modalBgColor, padding: '24px', borderRadius: '12px',
+      boxShadow: '0 8px 24px rgba(0,0,0,0.2)', textAlign: 'center',
+      border: `1px solid ${borderColor}`, maxWidth: '400px'
+    });
+
+    modalContent.innerHTML = `<p style="margin: 0 0 16px 0; font-size: 16px;">${message}</p>`;
+
+    const buttonsWrapper = document.createElement('div');
+    buttonsWrapper.style.display = 'flex';
+    buttonsWrapper.style.justifyContent = 'center';
+    buttonsWrapper.style.gap = '16px';
+
+    const cancelButton = document.createElement('button');
+    cancelButton.textContent = 'Cancel';
+    cancelButton.className = 'Button--secondary Button--medium Button';
+    cancelButton.style.width = '100px';
+
+    const okButton = document.createElement('button');
+    okButton.textContent = 'OK';
+    okButton.className = 'Button--primary Button--medium Button';
+    okButton.style.width = '100px';
+
+    cancelButton.onclick = () => {
+      document.body.removeChild(modalOverlay);
+      resolve(false);
+    };
+    okButton.onclick = () => {
+      document.body.removeChild(modalOverlay);
+      resolve(true);
+    };
+
+    buttonsWrapper.appendChild(cancelButton);
+    buttonsWrapper.appendChild(okButton);
+    modalContent.appendChild(buttonsWrapper);
+    modalOverlay.appendChild(modalContent);
+    document.body.appendChild(modalOverlay);
+    okButton.focus();
   });
 };

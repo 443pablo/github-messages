@@ -5,14 +5,16 @@ import { renderConversationList, handleConversationClick } from "../components/C
 import { renderMessages } from "../components/MessagesView";
 import { findUserByUsername } from "../api/users";
 import { MAIN_CONTAINER } from "../constants";
-import { showCustomAlert, showCustomPrompt, isDarkMode } from "../utils";
+import { showCustomAlert, showCustomPrompt, showCustomConfirm, isDarkMode } from "../utils";
+import { errorHandler } from "../error";
 
 export const messagesPage = async () => {
   if (location.pathname !== "/messages" && location.pathname !== "/messages/") {
     return;
   }
 
-  
+  // supabase errs after auth show up in query params
+  errorHandler();
 
   const {
     data: { session },
@@ -104,7 +106,30 @@ export const messagesPage = async () => {
   }
 
   document.getElementById("new-conversation-btn").addEventListener("click", async () => {
-    const username = await showCustomPrompt("Enter the GitHub username of the user you want to message:");
+    const dummyUsers = [
+      { name: 'John Doe', username: 'johndoe', avatar: 'https://avatars.githubusercontent.com/u/1' },
+      { name: 'Jane Smith', username: 'janesmith', avatar: 'https://avatars.githubusercontent.com/u/2' },
+      { name: 'AI Assistant', username: 'copilot', avatar: 'https://avatars.githubusercontent.com/u/87264559' },
+    ];
+
+    const dummyUsersHtml = dummyUsers.map(user => `
+      <div style="display: flex; align-items: center; padding: 8px; border-radius: 6px; cursor: pointer;" data-username="${user.username}">
+        <img src="${user.avatar}" width="40" height="40" style="border-radius: 50%; margin-right: 12px;">
+        <div>
+          <div style="font-weight: 600;">${user.name}</div>
+          <div style="color: var(--color-fg-muted);">${user.username}</div>
+        </div>
+      </div>
+    `).join('');
+
+    const suggestionsHtml = `
+      <div style="margin-bottom: 16px; border-top: 1px solid var(--color-border-muted);">
+        <h4 style="margin: 16px 0 8px 0; font-weight: 400; color: var(--color-fg-muted);">Suggestions</h4>
+        ${dummyUsersHtml}
+      </div>
+    `;
+
+    const username = await showCustomPrompt("Enter the GitHub username of the user you want to message:", { html: suggestionsHtml });
     if (!username) return;
 
     if (username.toLowerCase() === session.user.user_metadata.user_name.toLowerCase()) {
@@ -115,7 +140,7 @@ export const messagesPage = async () => {
     try {
       const otherUser = await findUserByUsername(username);
       if (!otherUser) {
-        await showCustomAlert("User not found. Note: usernames are case-sensitive.");
+        await showCustomConfirm(`${username} is not on GitHub Messages yet. You can still start a conversation, but they won't receive your messages until they sign up.`);
         return;
       }
 

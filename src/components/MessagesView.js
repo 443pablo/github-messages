@@ -9,7 +9,7 @@ export function renderMessages(messages, currentUserId, conversation) {
   messagesList.innerHTML = messages
     .map(
       (msg, idx) => `
-              <div class="message-item" data-message-idx="${idx}" style="margin-bottom: 8px; position: relative;">
+              <div class="message-item" data-message-idx="${idx}" style="padding-bottom: 8px; position: relative;">
                   <span style="font-weight: bold; color: #555;">${
                     msg.sender_id === currentUserId ? "You" : "Them"
                   }:</span>
