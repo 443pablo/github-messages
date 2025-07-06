@@ -1,0 +1,457 @@
+/* GitHub Messages - Consolidated CSS */
+
+/* Main containers and layout */
+.gh-messages-container {
+  position: relative;
+  height: 80vh;
+}
+
+.gh-messages-main {
+  display: flex;
+  height: calc(100% - 40px);
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 15px;
+  margin: 20px;
+}
+
+.gh-messages-main.dark {
+  border-color: #30363d;
+}
+
+/* Welcome screen */
+.gh-messages-welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 80vh;
+}
+
+.gh-messages-welcome h2 {
+  margin: 0 0 16px 0;
+}
+
+.gh-messages-welcome p {
+  margin: 0 0 16px 0;
+}
+
+.gh-messages-signin-btn {
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Sidebar */
+.gh-messages-sidebar {
+  min-width: 200px;
+  max-width: 250px;
+  border-right: 1px solid var(--subtle-border-color, #eee);
+  padding: 8px;
+  overflow-y: auto;
+}
+
+.gh-messages-sidebar.dark {
+  border-right-color: #30363d;
+}
+
+.gh-messages-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gh-messages-sidebar-header h3 {
+  margin: 0;
+}
+
+.gh-messages-new-conversation-btn {
+  background-color: #0969da;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  vertical-align: middle;
+  border-radius: 6px;
+  line-height: 1;
+}
+
+.gh-messages-new-conversation-btn svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.gh-messages-conversation-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Conversation list items */
+.gh-messages-conversation-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  border-radius: 6px;
+}
+
+.gh-messages-conversation-item:hover {
+  background-color: #f6f8fa;
+}
+
+.gh-messages-conversation-item.dark:hover {
+  background-color: #21262d;
+}
+
+.gh-messages-conversation-item.selected {
+  background-color: #f0f0f0;
+}
+
+.gh-messages-conversation-item.selected.dark {
+  background-color: #30363d;
+}
+
+.gh-messages-conversation-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.gh-messages-conversation-content {
+  flex: 1;
+}
+
+.gh-messages-conversation-name {
+  font-weight: bold;
+}
+
+.gh-messages-conversation-preview {
+  font-size: 13px;
+  color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+/* Main content area */
+.gh-messages-content {
+  flex: 1;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.gh-messages-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+}
+
+.gh-messages-header h3 {
+  margin: 0;
+}
+
+.gh-messages-signout-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 10;
+  margin-bottom: 8px;
+}
+
+.gh-messages-list {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid var(--subtle-border-color, #eee);
+  margin-bottom: 8px;
+  padding: 8px;
+}
+
+.gh-messages-list.dark {
+  border-color: #30363d;
+}
+
+.gh-messages-form {
+  display: flex;
+  gap: 4px;
+}
+
+.gh-messages-input {
+  flex: 1;
+}
+
+/* Message items */
+.message-item {
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  border-radius: 6px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+.message-item:hover {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(1px);
+}
+
+.message-item:active {
+  box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.15);
+  transform: translateY(2px);
+}
+
+.message-sender {
+  font-weight: bold;
+  color: #555;
+}
+
+/* .message-content inherits from parent, no specific styles needed */
+
+.message-timestamp {
+  font-size: 11px;
+  color: #aaa;
+  margin-left: 8px;
+}
+
+/* Loading spinner */
+.gh-messages-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.gh-messages-spinner {
+  width: 40px;
+  height: 40px;
+}
+
+/* Context menu */
+#custom-context-menu {
+  position: absolute;
+  display: none;
+  background: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 1000;
+  border-radius: 8px;
+  min-width: 120px;
+  overflow: hidden;
+  padding: 4px 0;
+}
+
+#custom-context-menu.dark {
+  background: #23272e;
+  border-color: #444;
+}
+
+#custom-context-menu .context-menu-item {
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background 0.15s, color 0.15s;
+  user-select: none;
+}
+
+#custom-context-menu .context-menu-item:hover {
+  background: #0078d4;
+  color: #fff;
+}
+
+#custom-context-menu .context-menu-item:active {
+  background: #005a9e;
+  color: #fff;
+}
+
+#custom-context-menu .context-menu-item.delete:hover {
+  background: #d32f2f;
+  color: #fff;
+}
+
+#custom-context-menu .context-menu-item.delete:active {
+  background: #b71c1c;
+  color: #fff;
+}
+
+/* Modal styles */
+.gh-messages-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.gh-messages-modal-content {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.gh-messages-modal-content.dark {
+  background: #161b22;
+  color: #f0f6fc;
+}
+
+.gh-messages-modal h3 {
+  margin: 0 0 8px 0;
+}
+
+.gh-messages-modal p {
+  margin: 0 0 16px 0;
+}
+
+.gh-messages-modal .title-only {
+  color: var(--color-fg-muted);
+}
+
+.gh-messages-modal .no-title {
+  font-size: 16px;
+}
+
+.gh-messages-modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.gh-messages-modal-buttons.single {
+  justify-content: center;
+}
+
+.gh-messages-modal-button {
+  width: 100px;
+  display: inline;
+}
+
+.gh-messages-prompt-form {
+  margin-bottom: 16px;
+}
+
+.gh-messages-prompt-input {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+/* User suggestions in prompt */
+.gh-messages-user-suggestions {
+  margin-bottom: 16px;
+  border-top: 1px solid var(--color-border-muted);
+}
+
+.gh-messages-user-suggestions h4 {
+  margin: 16px 0 8px 0;
+  font-weight: 400;
+  color: var(--color-fg-muted);
+}
+
+.gh-messages-user-suggestion {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.gh-messages-user-suggestion:hover {
+  background-color: #f6f8fa;
+}
+
+.gh-messages-user-suggestion.dark:hover {
+  background-color: #21262d;
+}
+
+.gh-messages-user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+
+.gh-messages-user-name {
+  font-weight: 600;
+}
+
+.gh-messages-user-username {
+  color: var(--color-fg-muted);
+}
+
+/* Profile buttons */
+.gh-messages-profile-buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+.gh-messages-follow-btn {
+  margin-right: 5px;
+}
+
+.gh-messages-unfollow-btn {
+  margin-right: 5px;
+}
+
+.gh-messages-message-btn {
+  margin-left: 5px;
+}
+
+/* Utility classes */
+.gh-messages-hidden {
+  opacity: 0;
+}
+
+.gh-messages-visible {
+  opacity: 1;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .gh-messages-main {
+    border-color: #30363d;
+  }
+  
+  .gh-messages-sidebar {
+    border-right-color: #30363d;
+  }
+  
+  .gh-messages-list {
+    border-color: #30363d;
+  }
+  
+  .gh-messages-conversation-item:hover {
+    background-color: #21262d;
+  }
+  
+  .gh-messages-conversation-item.selected {
+    background-color: #30363d;
+  }
+  
+  #custom-context-menu {
+    background: #23272e;
+    border-color: #444;
+  }
+  
+  .gh-messages-modal-content {
+    background: #161b22;
+    color: #f0f6fc;
+  }
+  
+  .gh-messages-user-suggestion:hover {
+    background-color: #21262d;
+  }
+}

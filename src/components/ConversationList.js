@@ -6,11 +6,11 @@ export function renderConversationList(conversations) {
     }
 
     const items = conversations.map(conv => `
-        <li style="display: flex; align-items: center; gap: 8px; padding: 6px 8px; cursor: pointer; transition: background-color 0.2s ease-in-out; border-radius: 6px;" data-conversation-id="${conv.id}">
-            <img src="${conv.otherUser.avatar}" alt="avatar" style="width:32px;height:32px;border-radius:50%;object-fit:cover;">
-            <div style="flex:1;">
-                <div style="font-weight: bold;">${conv.name ?? conv.otherUser.name}</div>
-                <div style="font-size: 13px; color: #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">${conv.lastMessage}</div>
+        <li class="gh-messages-conversation-item" data-conversation-id="${conv.id}">
+            <img src="${conv.otherUser.avatar}" alt="avatar" class="gh-messages-conversation-avatar">
+            <div class="gh-messages-conversation-content">
+                <div class="gh-messages-conversation-name">${conv.name ?? conv.otherUser.name}</div>
+                <div class="gh-messages-conversation-preview">${conv.lastMessage}</div>
             </div>
         </li>`
     ).join("");
@@ -26,11 +26,14 @@ export const handleConversationClick = (onConversationSelect) => {
         const li = event.target.closest("li[data-conversation-id]");
         if (li) {
             if (currentSelectedItem) {
-                currentSelectedItem.style.backgroundColor = "";
+                currentSelectedItem.classList.remove("selected");
             }
             
-            const isDarkMode = document.documentElement.getAttribute('data-color-mode') === 'dark';
-            li.style.backgroundColor = isDarkMode ? '#30363d' : '#f0f0f0';
+            const isDark = document.documentElement.getAttribute('data-color-mode') === 'dark';
+            li.classList.add("selected");
+            if (isDark) {
+                li.classList.add("dark");
+            }
             currentSelectedItem = li;
 
             const conversationId = li.getAttribute("data-conversation-id");

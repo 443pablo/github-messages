@@ -19,26 +19,22 @@ export function addProfileButtons() {
 
     if (followForm) {
         const followButton = followForm?.children[1];
-        followForm.style.display = "flex";
-        followForm.style.flexDirection = "row";
-        unFollowForm.style.display = "flex";
-        unFollowForm.style.flexDirection = "row";
+        followForm.classList.add("gh-messages-profile-buttons");
+        unFollowForm.classList.add("gh-messages-profile-buttons");
 
         followForm.innerHTML += `\
-        <input type="submit" name="commit" value="Message" class="btn btn-block" title="Message user" aria-label="Message user">
+        <input type="submit" name="commit" value="Message" class="btn btn-block gh-messages-message-btn" title="Message user" aria-label="Message user">
         `;
         unFollowForm.innerHTML += `\
-        <input type="submit" name="commit" value="Message" class="btn btn-block" title="Message user" aria-label="Message user">
+        <input type="submit" name="commit" value="Message" class="btn btn-block gh-messages-message-btn" title="Message user" aria-label="Message user">
         `;
 
         const messageButton = followForm?.children[2];
         const messageButtonUnfollow = unFollowForm?.children[2];
         const unFollowButton = document.querySelector(SELECTOR_UNFOLLOW_BUTTON);
 
-        followButton.style.marginRight = "5px";
-        unFollowButton.style.marginRight = "5px";
-        messageButton.style.marginLeft = "5px";
-        messageButtonUnfollow.style.marginLeft = "5px";
+        followButton.classList.add("gh-messages-follow-btn");
+        unFollowButton.classList.add("gh-messages-unfollow-btn");
 
         messageButton.addEventListener("click", (event) => {
             event.preventDefault();

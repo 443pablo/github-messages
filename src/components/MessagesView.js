@@ -6,15 +6,16 @@ export function renderMessages(messages, currentUserId, conversation) {
     messagesList.innerHTML = "";
     return;
   }
+  
   messagesList.innerHTML = messages
     .map(
       (msg, idx) => `
-              <div class="message-item" data-message-idx="${idx}" style="padding-bottom: 8px; position: relative;">
-                  <span style="font-weight: bold; color: #555;">${
+              <div class="message-item" data-message-idx="${idx}">
+                  <span class="message-sender">${
                     msg.sender_id === currentUserId ? "You" : "Them"
                   }:</span>
-                  <span>${msg.content}</span>
-                  <span style="font-size: 11px; color: #aaa; margin-left: 8px;">${new Date(
+                  <span class="message-content">${msg.content}</span>
+                  <span class="message-timestamp">${new Date(
                     msg.created_at
                   ).toLocaleTimeString()}</span>
               </div>

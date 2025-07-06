@@ -31,7 +31,8 @@
         },
         {
             "matches": ["https://github.com/*"],
-            "js": ["dist/index.js"]
+            "js": ["dist/index.js"],
+            "css": ["src/pages/css/index.css"]
         }
     ]
 }

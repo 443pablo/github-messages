@@ -1,8 +1,6 @@
 import { isDarkMode } from "../../utils";
 import { deleteMessage } from "../../api/messages";
 import { showCustomConfirm as confirm } from "../../utils";
-//@ts-ignore
-import css from "./context-menu.css"; // esbuild configured to import as txt
 
 let currentMessageElement: HTMLElement | null = null;
 let currentMessages: any[] = [];
@@ -17,17 +15,11 @@ export function renderContextMenu(messagesList, messages = []) {
   // ctx menu hidden by default
   const menu = document.createElement("div");
   menu.id = "custom-context-menu";
-  menu.style.position = "absolute";
-  menu.style.display = "none";
   const dark = isDarkMode();
-  menu.style.background = dark ? "#23272e" : "#fff";
-  menu.style.border = dark ? "1px solid #444" : "1px solid #ccc";
-  menu.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
-  menu.style.zIndex = "1000";
+  if (dark) {
+    menu.classList.add("dark");
+  }
   menu.innerHTML = `
-  <style>
-    ${css}
-    </style>
     <div class="context-menu-item" id="context-copy">Copy</div>
     <div class="context-menu-item delete" id="context-delete">Delete</div>
   `;

@@ -27,24 +27,13 @@ class Modal {
 
   private createOverlay(): HTMLElement {
     const overlay = document.createElement('div');
-    Object.assign(overlay.style, {
-      position: 'fixed', top: '0', left: '0', width: '100%', height: '100%',
-      backgroundColor: 'rgba(0,0,0,0.6)', display: 'flex', alignItems: 'center',
-      justifyContent: 'center', zIndex: '1000', backdropFilter: 'blur(3px)'
-    });
+    overlay.className = 'gh-messages-modal-overlay';
     return overlay;
   }
 
   private createContent(): HTMLElement {
-    const modalBgColor = isDarkMode() ? '#161b22' : '#ffffff';
-    const borderColor = isDarkMode() ? '#30363d' : '#d0d7de';
-    
     const content = document.createElement('div');
-    Object.assign(content.style, {
-      backgroundColor: modalBgColor, padding: '24px', borderRadius: '12px',
-      boxShadow: '0 8px 24px rgba(0,0,0,0.2)', 
-      border: `1px solid ${borderColor}`
-    });
+    content.className = `gh-messages-modal-content ${isDarkMode() ? 'dark' : ''}`;
     return content;
   }
 
@@ -52,11 +41,11 @@ class Modal {
     let html = '';
     
     if (config.title) {
-      html += `<h3 style="margin: 0 0 8px 0;">${config.title}</h3>`;
+      html += `<h3 class="gh-messages-modal">${config.title}</h3>`;
     }
     
     if (config.text) {
-      html += `<p style="margin: 0 0 16px 0; ${config.title ? 'color: var(--color-fg-muted);' : 'font-size: 16px;'}">${config.text}</p>`;
+      html += `<p class="gh-messages-modal ${config.title ? 'title-only' : 'no-title'}">${config.text}</p>`;
     }
     
     if (config.html) {
@@ -68,9 +57,7 @@ class Modal {
 
   protected addButtons(buttons: ModalButton[]): void {
     const buttonsWrapper = document.createElement('div');
-    buttonsWrapper.style.display = 'flex';
-    buttonsWrapper.style.justifyContent = buttons.length === 1 ? 'center' : 'flex-end';
-    buttonsWrapper.style.gap = '8px';
+    buttonsWrapper.className = `gh-messages-modal-buttons ${buttons.length === 1 ? 'single' : ''}`;
 
     buttons.forEach(buttonConfig => {
       const button = document.createElement('button');
@@ -78,7 +65,11 @@ class Modal {
       button.className = `Button--${buttonConfig.primary ? 'primary' : 'secondary'} Button--medium Button`;
       
       if (buttonConfig.style) {
+        // For backwards compatibility, still apply custom styles if provided
         button.style.cssText = buttonConfig.style;
+      } else {
+        // Use default modal button class
+        button.classList.add('gh-messages-modal-button');
       }
       
       button.onclick = buttonConfig.onClick;
@@ -131,14 +122,14 @@ class AlertModal extends Modal {
 class PromptModal extends Modal {
   show(params: string | { title?: string, html?: string, text:string }): Promise<string | null> {
     return new Promise((resolve) => {
-      Object.assign(this.content.style, { width: '448px' });
+      this.content.style.width = '448px'; // Keep this one style for specific modal width
       
       const config: ModalConfig = {
         title: typeof params === 'object' ? params.title : undefined,
         text: typeof params === 'string' ? params : params.text,
         html: `
-          <form id="prompt-form">
-            <input autocomplete="off" type="text" id="prompt-input" placeholder="Username" style="width: 100%; margin-bottom: 16px;" class="form-control" />
+          <form id="prompt-form" class="gh-messages-prompt-form">
+            <input autocomplete="off" type="text" id="prompt-input" placeholder="Username" class="gh-messages-prompt-input form-control" />
             ${typeof params === 'object' && params?.html ? params.html : ''}
           </form>
         `

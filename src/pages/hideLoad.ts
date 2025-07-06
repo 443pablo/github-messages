@@ -4,7 +4,7 @@ import { MAIN_CONTAINER } from "../constants";
 const observer = new MutationObserver((mutations, obs) => {
   const el = document.querySelector(MAIN_CONTAINER);
   if (el instanceof HTMLElement) {
-    el.style.opacity = "0";
+    el.classList.add("gh-messages-hidden");
     obs.disconnect(); // stop observing
   }
 });
