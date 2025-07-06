@@ -22,7 +22,7 @@ export function renderMessages(messages, currentUserId, conversation) {
     )
     .join("");
 
-  renderContextMenu(messagesList);
+  renderContextMenu(messagesList, messages);
 
   messagesList.scrollTop = messagesList.scrollHeight;
 }

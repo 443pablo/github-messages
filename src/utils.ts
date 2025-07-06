@@ -226,8 +226,18 @@ export const showCustomAlert = (message: string | ModalConfig): Promise<void> =>
   return new AlertModal().show(message);
 };
 
-export const showCustomPrompt = (promptMessage: string |ModalConfig): Promise<string | null> => {
-  return new PromptModal().show(promptMessage);
+export const showCustomPrompt = (promptMessage: string | ModalConfig): Promise<string | null> => {
+  if (typeof promptMessage === 'string') {
+    return new PromptModal().show(promptMessage);
+  } else {
+    // Ensure text is always a string
+    const { title, html, text } = promptMessage;
+    return new PromptModal().show({
+      title,
+      html,
+      text: text ?? ''
+    });
+  }
 };
 
 export const showCustomConfirm = (message: string | ModalConfig): Promise<boolean> => {

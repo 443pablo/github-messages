@@ -1,7 +1,14 @@
 import { isDarkMode } from "../../utils";
+import { deleteMessage } from "../../api/messages";
+import { showCustomConfirm as confirm } from "../../utils";
 //@ts-ignore
 import css from "./context-menu.css"; // esbuild configured to import as txt
-export function renderContextMenu(messagesList) {
+
+let currentMessageElement: HTMLElement | null = null;
+let currentMessages: any[] = [];
+
+export function renderContextMenu(messagesList, messages = []) {
+  currentMessages = messages;
   if (!messagesList) return;
 
   const oldMenu = document.getElementById("custom-context-menu");
@@ -34,6 +41,7 @@ export function renderContextMenu(messagesList) {
   messagesList.querySelectorAll(".message-item").forEach((el) => {
     el.addEventListener("contextmenu", (e) => {
       e.preventDefault();
+      currentMessageElement = el as HTMLElement;
       menu.style.display = "block";
       menu.style.left = `${e.pageX}px`;
       menu.style.top = `${e.pageY}px`;
@@ -43,16 +51,49 @@ export function renderContextMenu(messagesList) {
   // this is convoluted bc typescript
   const copyBtn = document.getElementById("context-copy");
   if (copyBtn) {
-    copyBtn.onclick = (e) => {
+    copyBtn.onclick = async (e) => {
       e.stopPropagation();
       menu.style.display = "none";
+      
+      if (currentMessageElement) {
+        // Get the message content from the element
+        const contentSpan = currentMessageElement.querySelector('span:nth-child(2)');
+        if (contentSpan) {
+          try {
+            await navigator.clipboard.writeText(contentSpan.textContent || '');
+            console.log('Message copied to clipboard');
+          } catch (err) {
+            console.error('Failed to copy message:', err);
+          }
+        }
+      }
     };
   }
+  
   const deleteBtn = document.getElementById("context-delete");
   if (deleteBtn) {
-    deleteBtn.onclick = (e) => {
+    deleteBtn.onclick = async (e) => {
       e.stopPropagation();
       menu.style.display = "none";
+      
+      if (currentMessageElement && currentMessages.length > 0) {
+        const messageIdx = parseInt(currentMessageElement.getAttribute('data-message-idx') || '-1');
+        if (messageIdx >= 0 && messageIdx < currentMessages.length) {
+          const message = currentMessages[messageIdx];
+          
+          if (await confirm('Are you sure you want to delete this message?')) {
+            try {
+              await deleteMessage(message.id);
+              // Remove the message element from the DOM
+              currentMessageElement.remove();
+              console.log('Message deleted successfully');
+            } catch (err) {
+              console.error('Failed to delete message:', err);
+              alert('Failed to delete message. Please try again.');
+            }
+          }
+        }
+      }
     };
   }
 }

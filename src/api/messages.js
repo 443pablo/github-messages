@@ -42,6 +42,14 @@ export async function fetchMessages(conversationId) {
     return messages;
 }
 
+export async function deleteMessage(messageId) {
+    const { error } = await supabase
+        .from("messages")
+        .delete()
+        .eq("id", messageId);
+    if (error) throw error;
+}
+
 export class Message {
     constructor({ id, conversation_id, sender_id, content, created_at }) {
         this.id = id;
