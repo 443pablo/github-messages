@@ -21,10 +21,9 @@ function zipFiles() {
     throw new Error('dist directory does not exist... huh??');
   }
   
-  const mapPath = path.join(DIST_DIR, 'index.js.map');
-  if (fs.existsSync(mapPath)) {
-    fs.unlinkSync(mapPath);
-  }
+  fs.readdirSync(DIST_DIR)
+    .filter((file) => file.endsWith('.map'))
+    .forEach((file) => fs.unlinkSync(path.join(DIST_DIR, file)));
 
   if (fs.existsSync(ZIP_PATH)) {
     fs.unlinkSync(ZIP_PATH);

@@ -29,4 +29,12 @@ esbuild.build({
     sourcemap: !isProd
 });
 
+esbuild.build({
+    entryPoints: ["src/pages/css/index.css"],
+    bundle: true,
+    outfile: "dist/index.css",
+    minify: true,
+    sourcemap: !isProd
+});
+
 console.log("ok!");
