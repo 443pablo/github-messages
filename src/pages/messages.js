@@ -1,3 +1,5 @@
+import { renderWelcomeView } from "../components/WelcomeView";
+import { renderChatView } from "../components/ChatView";
 import { supabase } from "../api/supabase";
 import { fetchConversations, startConversation, getConversationByID } from "../api/conversations";
 import { sendMessage, onNewMessage, fetchMessages } from "../api/messages";
@@ -23,59 +25,11 @@ export const messagesPage = async () => {
   main.classList.add("gh-messages-visible");
 
   if (!session) {
-    document.title = "Messages - GitHub";
-    main.innerHTML = `
-              <div class="gh-messages-welcome">
-                  <h2>Welcome to GitHub Messages</h2>
-                  <p>You need to sign in with GitHub to use messages.</p>
-                  <button id="sign-in-github" class="gh-messages-signin-btn Button--primary Button--medium Button">Sign in with GitHub</button>
-              </div>
-          `;
-    document
-      .getElementById("sign-in-github")
-      .addEventListener("click", async () => {
-        const { error } = await supabase.auth.signInWithOAuth({
-          provider: "github",
-          options: { redirectTo: window.location.origin + "/messages" },
-        });
-        if (error) {
-          alert("Error signing in: " + error.message);
-        }
-      });
+    renderWelcomeView(main);
     return;
   }
 
-  document.title = "Messages - GitHub";
-
-  const isDark = isDarkMode();
-
-  main.innerHTML = `
-    <div class="gh-messages-container">
-      <div class="gh-messages-main ${isDark ? 'dark' : ''}">
-        <aside class="gh-messages-sidebar ${isDark ? 'dark' : ''}">
-          <div class="gh-messages-sidebar-header">
-            <h3>Conversations</h3>
-            <button id="new-conversation-btn" class="gh-messages-new-conversation-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                <path fill="white" d="M7.75 2a.75.75 0 0 1 .75.75V7h4.25a.75.75 0 0 1 0 1.5H8.5v4.25a.75.75 0 0 1-1.5 0V8.5H2.75a.75.75 0 0 1 0-1.5H7V2.75A.75.75 0 0 1 7.75 2Z"></path>
-              </svg>
-            </button>
-          </div>
-          <ul id="conversation-list" class="gh-messages-conversation-list"></ul>
-        </aside>
-        <section class="gh-messages-content">
-        <div class="gh-messages-header">
-          <h3>Messages</h3>
-          <button id="sign-out-github" class="gh-messages-signout-btn Button--secondary Button--small Button">Sign out</button>
-        </div>
-        <div id="messages-list" class="gh-messages-list ${isDark ? 'dark' : ''}"></div>
-        <form id="send-message-form" class="gh-messages-form">
-          <input autocomplete="off" type="text" id="message-input" placeholder="Type a message..." class="gh-messages-input form-control" />
-          <button class="Button--secondary Button--small Button" type="submit">Send</button>
-        </form>
-      </section>
-    </div>
-  `;
+  renderChatView(main);
 
   document
     .getElementById("sign-out-github")
@@ -163,6 +117,10 @@ export const messagesPage = async () => {
 
   handleConversationClick(async (conversationId) => {
     currentConversationId = conversationId;
+    const messagesList = document.getElementById("messages-list");
+    // loading spinner
+    messagesList.innerHTML = `<div class="gh-messages-loading"><svg class="gh-messages-spinner" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" stroke="#0969da"><g fill="none" fill-rule="evenodd"><g transform="translate(2 2)" stroke-width="3"><circle stroke-opacity=".3" cx="18" cy="18" r="18"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s" repeatCount="indefinite"/></path></g></g></svg></div>`;
+    
     await showMessages(conversationId);
     if (unsubscribe) unsubscribe.unsubscribe();
     unsubscribe = onNewMessage(conversationId, async (msg) => {
@@ -173,7 +131,7 @@ export const messagesPage = async () => {
   });
 
   document
-    .getElementById("send-message-form")
+      .getElementById("send-message-form")
     .addEventListener("submit", async (e) => {
       e.preventDefault();
       const input = document.getElementById("message-input");
