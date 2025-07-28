@@ -68,7 +68,7 @@ export const messagesPage = async () => {
     userProfiles.forEach(profile => {
       userProfilesMap.set(profile.id, {
         ...profile,
-        username: profile.name // In the profiles table, 'name' field is the GitHub username
+        username: profile.user_name
       });
     });
     
@@ -115,7 +115,7 @@ export const messagesPage = async () => {
     if (!username) return;
 
     if (username.toLowerCase() === session.user.user_metadata.user_name.toLowerCase()) {
-      await showCustomAlert("You cannot start a conversation with yourself.");
+      await showCustomAlert("Sorry you're lonely but you cannot start a conversation with yourself. (actually you can with the API shh)");
       return;
     }
 

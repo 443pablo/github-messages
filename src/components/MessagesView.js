@@ -1,5 +1,6 @@
 import { renderContextMenu } from "./context/Message";
 import { format, isToday, isYesterday, isThisWeek, isThisYear, parseISO } from "date-fns";
+import { showCustomAlert } from "../utils";
 
 export function renderMessages(messages, currentUserId, conversation, userProfiles = new Map()) {
   const messagesList = document.getElementById("messages-list");
@@ -51,11 +52,11 @@ export function renderMessages(messages, currentUserId, conversation, userProfil
   let htmlContent = "";
   let msgIdx = 0; // Global message index for context menu
 
-  // Render messages grouped by date
+  // messages grouped by date
   messagesByDate.forEach((dayMessages, dateKey) => {
     const date = new Date(dateKey);
     
-    // Add date separator
+    // date separator
     htmlContent += `
       <div class="date-separator">
         <span class="date-separator-line"></span>
@@ -64,7 +65,7 @@ export function renderMessages(messages, currentUserId, conversation, userProfil
       </div>
     `;
 
-    // Add messages for this day
+    // add messages for this day
     dayMessages.forEach(msg => {
       const userInfo = getUserInfo(msg.sender_id);
       htmlContent += `
@@ -86,14 +87,15 @@ export function renderMessages(messages, currentUserId, conversation, userProfil
 
   messagesList.innerHTML = htmlContent;
 
-  // Add click handlers for username links
+  // click handlers for username links
   messagesList.querySelectorAll('.message-sender-link').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       const username = link.dataset.username;
       if (username && username !== "Unknown User" && username !== "unknown") {
-        // Navigate to GitHub profile using the actual GitHub username
         window.open(`https://github.com/${username}`, '_blank');
+      } else {
+        showCustomAlert("This user does not have a valid GitHub profile.");
       }
     });
   });

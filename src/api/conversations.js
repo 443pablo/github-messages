@@ -127,6 +127,7 @@ export class Conversation {
             this.otherUser = {
                 id: otherUserId,
                 name: profile?.name || "Unknown",
+                username: profile?.user_name || "unknown",
                 avatar: profile?.avatar_url || "https://github.com/ghost.png"
             };
         }
