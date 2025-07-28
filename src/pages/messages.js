@@ -59,13 +59,17 @@ export const messagesPage = async () => {
     // Add current user profile from session metadata
     userProfilesMap.set(session.user.id, {
       id: session.user.id,
-      name: session.user.user_metadata.user_name || session.user.user_metadata.full_name || "You",
+      name: session.user.user_metadata.user_name || session.user.user_metadata.full_name || "Unknown",
+      username: session.user.user_metadata.user_name, // GitHub username for routing
       avatar_url: session.user.user_metadata.avatar_url
     });
     
     // Add other users' profiles
     userProfiles.forEach(profile => {
-      userProfilesMap.set(profile.id, profile);
+      userProfilesMap.set(profile.id, {
+        ...profile,
+        username: profile.name // In the profiles table, 'name' field is the GitHub username
+      });
     });
     
     // Update the header to show the conversation participant

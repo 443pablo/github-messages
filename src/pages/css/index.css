@@ -224,6 +224,60 @@
   color: #c9d1d9;
 }
 
+/* Clickable username styles */
+.message-sender-link {
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 1px 3px;
+  margin: -1px -3px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.message-sender-link:hover {
+  background-color: rgba(9, 105, 218, 0.1);
+  color: #0969da;
+}
+
+.dark .message-sender-link:hover {
+  background-color: rgba(88, 166, 255, 0.15);
+  color: #58a6ff;
+}
+
+/* Date separator styles */
+.date-separator {
+  display: flex;
+  align-items: center;
+  margin: 16px 0 12px 0;
+  opacity: 0.7;
+}
+
+.date-separator-line {
+  flex: 1;
+  height: 1px;
+  background-color: #e1e4e8;
+  margin: 0 8px;
+}
+
+.dark .date-separator-line {
+  background-color: #30363d;
+}
+
+.date-separator-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: #656d76;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  padding: 0 8px;
+}
+
+.dark .date-separator-text {
+  color: #8b949e;
+}
+
 /* .message-content inherits from parent, no specific styles needed */
 
 .message-timestamp {
