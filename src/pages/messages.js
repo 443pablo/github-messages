@@ -5,7 +5,7 @@ import { fetchConversations, startConversation, getConversationByID } from "../a
 import { sendMessage, onNewMessage, fetchMessages } from "../api/messages";
 import { renderConversationList, handleConversationClick } from "../components/ConversationList";
 import { renderMessages } from "../components/MessagesView";
-import { findUserByUsername } from "../api/users";
+import { findUserByUsername, getUserProfiles } from "../api/users";
 import { MAIN_CONTAINER } from "../constants";
 import { showCustomAlert, showCustomPrompt, showCustomConfirm, isDarkMode } from "../utils";
 import { errorHandler } from "../error";
@@ -51,11 +51,36 @@ export const messagesPage = async () => {
     
     const messages = await fetchMessages(conversationId);
     const conv = await getConversationByID(conversationId);
-    const usersInConversation = new Map();
-    conv.users.forEach(userId => {
-      usersInConversation.set(userId, null);
+    
+    // Fetch user profiles for all users in the conversation
+    const userProfiles = await getUserProfiles(conv.users);
+    const userProfilesMap = new Map();
+    
+    // Add current user profile from session metadata
+    userProfilesMap.set(session.user.id, {
+      id: session.user.id,
+      name: session.user.user_metadata.user_name || session.user.user_metadata.full_name || "You",
+      avatar_url: session.user.user_metadata.avatar_url
     });
-    renderMessages(messages, session.user.id, conv);
+    
+    // Add other users' profiles
+    userProfiles.forEach(profile => {
+      userProfilesMap.set(profile.id, profile);
+    });
+    
+    // Update the header to show the conversation participant
+    const headerElement = document.getElementById("message-view-header");
+    if (headerElement) {
+      const otherUserId = conv.users.find(uid => uid !== session.user.id);
+      if (otherUserId && userProfilesMap.has(otherUserId)) {
+        const otherUser = userProfilesMap.get(otherUserId);
+        headerElement.textContent = `${otherUser.name}`;
+      } else {
+        headerElement.textContent = "Messages";
+      }
+    }
+    
+    renderMessages(messages, session.user.id, conv, userProfilesMap);
   }
 
   document.getElementById("new-conversation-btn").addEventListener("click", async () => {
@@ -117,10 +142,6 @@ export const messagesPage = async () => {
 
   handleConversationClick(async (conversationId) => {
     currentConversationId = conversationId;
-    const messagesList = document.getElementById("messages-list");
-    // loading spinner
-    messagesList.innerHTML = `<div class="gh-messages-loading"><svg class="gh-messages-spinner" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" stroke="#0969da"><g fill="none" fill-rule="evenodd"><g transform="translate(2 2)" stroke-width="3"><circle stroke-opacity=".3" cx="18" cy="18" r="18"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s" repeatCount="indefinite"/></path></g></g></svg></div>`;
-    
     await showMessages(conversationId);
     if (unsubscribe) unsubscribe.unsubscribe();
     unsubscribe = onNewMessage(conversationId, async (msg) => {

@@ -29,3 +29,21 @@ export async function getUserProfile(userId) {
 
     return data;
 }
+
+export async function getUserProfiles(userIds) {
+    if (!userIds || userIds.length === 0) {
+        return [];
+    }
+
+    const { data, error } = await supabase
+        .from("profiles")
+        .select("id, name, avatar_url")
+        .in("id", userIds);
+
+    if (error) {
+        console.error("Error fetching user profiles", error);
+        throw error;
+    }
+
+    return data || [];
+}
