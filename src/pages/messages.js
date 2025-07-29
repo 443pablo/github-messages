@@ -44,10 +44,12 @@ export const messagesPage = async () => {
   const conversations = await fetchConversations(session.user.id);
   renderConversationList(conversations);
 
-  async function showMessages(conversationId) {
+  async function showMessages(conversationId, showSpinner = false) {
     const messagesList = document.getElementById("messages-list");
-    // loading spinner
-    messagesList.innerHTML = `<div class="gh-messages-loading"><svg class="gh-messages-spinner" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" stroke="#0969da"><g fill="none" fill-rule="evenodd"><g transform="translate(2 2)" stroke-width="3"><circle stroke-opacity=".3" cx="18" cy="18" r="18"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s" repeatCount="indefinite"/></path></g></g></svg></div>`;
+    // loading spinner only when explicitly requested
+    if (showSpinner) {
+      messagesList.innerHTML = `<div class="gh-messages-loading"><svg class="gh-messages-spinner" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" stroke="#0969da"><g fill="none" fill-rule="evenodd"><g transform="translate(2 2)" stroke-width="3"><circle stroke-opacity=".3" cx="18" cy="18" r="18"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s" repeatCount="indefinite"/></path></g></g></svg></div>`;
+    }
     
     const messages = await fetchMessages(conversationId);
     const conv = await getConversationByID(conversationId);
@@ -146,7 +148,7 @@ export const messagesPage = async () => {
 
   handleConversationClick(async (conversationId) => {
     currentConversationId = conversationId;
-    await showMessages(conversationId);
+    await showMessages(conversationId, true);
     if (unsubscribe) unsubscribe.unsubscribe();
     unsubscribe = onNewMessage(conversationId, async (msg) => {
       if (msg.sender_id !== session.user.id) {
