@@ -13,4 +13,4 @@ export const SELECTOR_NAV_PR =
   "body > div.logged-in.env-production.page-responsive > div.position-relative.header-wrapper.js-header-wrapper > header > div.AppHeader-globalBar > div.AppHeader-globalBar-end > div.AppHeader-actions.position-relative";
 
 // main stuff
-export const MAIN_CONTAINER = "body > div.logged-in.env-production > div.application-main > main"
+export const MAIN_CONTAINER = "body > div.env-production > div.application-main > main"
