@@ -68,6 +68,9 @@ export function renderMessages(messages, currentUserId, conversation, userProfil
     // add messages for this day
     dayMessages.forEach(msg => {
       const userInfo = getUserInfo(msg.sender_id);
+      const msgDate = parseISO(msg.created_at);
+      const fullDateTime = format(msgDate, "EEEE, MMMM d, yyyy 'at' h:mm:ss a");
+      
       htmlContent += `
         <div class="message-item" data-message-idx="${msgIdx}">
           <span class="message-sender">
@@ -76,7 +79,7 @@ export function renderMessages(messages, currentUserId, conversation, userProfil
             </span>:
           </span>
           <span class="message-content">${msg.content}</span>
-          <span class="message-timestamp">${new Date(
+          <span class="message-timestamp" title="${fullDateTime}">${new Date(
             msg.created_at
           ).toLocaleTimeString()}</span>
         </div>

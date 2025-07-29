@@ -228,6 +228,7 @@
 }
 
 .message-sender {
+  user-select: none;
   font-weight: bold;
   color: #555;
 }
@@ -259,6 +260,7 @@
 
 /* Date separator styles */
 .date-separator {
+  user-select: none;
   display: flex;
   align-items: center;
   margin: 16px 0 12px 0;
@@ -419,7 +421,7 @@
 
 .gh-messages-modal-button {
   width: 100px;
-  display: inline;
+  display: inline !important;
 }
 
 .gh-messages-prompt-form {
