@@ -73,7 +73,10 @@ export function renderContextMenu(messagesList, messages = []) {
         if (messageIdx >= 0 && messageIdx < currentMessages.length) {
           const message = currentMessages[messageIdx];
           
-          if (await confirm('Are you sure you want to delete this message?')) {
+          // skip confirmation if shift was pressed during delete button click
+          const shouldDelete = e.shiftKey || await confirm('Are you sure you want to delete this message?');
+          
+          if (shouldDelete) {
             try {
               await deleteMessage(message.id);
               // Remove the message element from the DOM
