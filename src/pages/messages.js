@@ -77,12 +77,16 @@ export const messagesPage = async () => {
     // Update the header to show the conversation participant
     const headerElement = document.getElementById("message-view-header");
     if (headerElement) {
-      const otherUserId = conv.users.find(uid => uid !== session.user.id);
-      if (otherUserId && userProfilesMap.has(otherUserId)) {
-        const otherUser = userProfilesMap.get(otherUserId);
-        headerElement.textContent = `${otherUser.name}`;
+      if (conv.name) {
+        headerElement.textContent = conv.name;
       } else {
-        headerElement.textContent = "Messages";
+        const otherUserId = conv.users.find(uid => uid !== session.user.id);
+        if (otherUserId && userProfilesMap.has(otherUserId)) {
+          const otherUser = userProfilesMap.get(otherUserId);
+          headerElement.textContent = `${otherUser.name}`;
+        } else {
+          headerElement.textContent = "Messages";
+        }
       }
     }
     
