@@ -164,8 +164,44 @@ export const messagesPage = async () => {
       const input = document.getElementById("message-input");
       const content = input.value.trim();
       if (!content || !currentConversationId) return;
-      await sendMessage(currentConversationId, session.user.id, content);
+      
+      // immediately show the message as pending
+      const messagesList = document.getElementById("messages-list");
+      const tempId = `temp-${Date.now()}`;
+      const pendingMessageHtml = `
+        <div class="message-item pending" data-temp-id="${tempId}">
+          <span class="message-sender">
+            <span class="message-sender-link" data-username="${session.user.user_metadata.user_name}" data-user-id="${session.user.id}">
+              ${session.user.user_metadata.full_name || session.user.user_metadata.user_name || "You"}
+            </span>:
+          </span>
+          <span class="message-content">${content}</span>
+          <span class="message-timestamp">Sending...</span>
+        </div>
+      `;
+      messagesList.insertAdjacentHTML('beforeend', pendingMessageHtml);
+      messagesList.scrollTop = messagesList.scrollHeight;
+      
       input.value = "";
-      await showMessages(currentConversationId);
+      
+      try {
+        await sendMessage(currentConversationId, session.user.id, content);
+        // update the pending message to delivered state
+        const pendingElement = document.querySelector(`[data-temp-id="${tempId}"]`);
+        if (pendingElement) {
+          pendingElement.classList.remove('pending');
+          const timestampEl = pendingElement.querySelector('.message-timestamp');
+          if (timestampEl) {
+            timestampEl.textContent = new Date().toLocaleTimeString();
+          }
+        }
+      } catch (error) {
+        // if sending fails, remove the pending message
+        const pendingElement = document.querySelector(`[data-temp-id="${tempId}"]`);
+        if (pendingElement) {
+          pendingElement.remove();
+        }
+        console.error("Failed to send message:", error);
+      }
     });
 };

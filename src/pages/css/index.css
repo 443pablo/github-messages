@@ -197,6 +197,18 @@
   border: 1px solid transparent;
 }
 
+.message-item.pending {
+  opacity: 0.5;
+  /*background: #f8f9fa;*/
+  border: 1px solid #e9ecef;
+  transition: opacity 0.3s ease-in-out, background 0.3s ease-in-out;
+}
+
+.dark .message-item.pending {
+  /*background: #21262d;*/
+  border: 1px solid #30363d;
+}
+
 .message-item:hover {
   background: #f8f9fa;
   border: 1px solid #e9ecef;
