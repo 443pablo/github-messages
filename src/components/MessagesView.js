@@ -31,9 +31,9 @@ export function renderMessages(messages, currentUserId, conversation, userProfil
     } else if (isThisWeek(date)) {
       return format(date, "EEEE"); // Monday, Tuesday, etc.
     } else if (isThisYear(date)) {
-      return format(date, "MMMM d"); // January 15
+      return format(date, "EEE, MMM d"); // Wed, Dec 3
     } else {
-      return format(date, "MMMM d, yyyy"); // January 15, 2023
+      return format(date, "EEE, MMM d, yyyy"); // Wed, Dec 3, 2023
     }
   };
 
@@ -68,22 +68,23 @@ export function renderMessages(messages, currentUserId, conversation, userProfil
     // add messages for this day
     dayMessages.forEach(msg => {
       const userInfo = getUserInfo(msg.sender_id);
-      const msgDate = parseISO(msg.created_at);
-      const fullDateTime = format(msgDate, "EEEE, MMMM d, yyyy 'at' h:mm:ss a");
-      
-      htmlContent += `
-        <div class="message-item" data-message-idx="${msgIdx}">
-          <span class="message-sender">
-            <span class="message-sender-link" data-username="${userInfo.username}" data-user-id="${msg.sender_id}">
-              ${userInfo.name}
-            </span>:
-          </span>
-          <span class="message-content">${msg.content}</span>
-          <span class="message-timestamp" title="${fullDateTime}">${new Date(
-            msg.created_at
-          ).toLocaleTimeString()}</span>
-        </div>
-      `;
+        const msgDate = parseISO(msg.created_at);
+        const fullDateTime = msg.pending ? "" : format(msgDate, "EEEE, MMMM d, yyyy 'at' h:mm:ss a");
+        const timeText = msg.pending ? "Sending..." : new Date(msg.created_at).toLocaleTimeString();
+        const tempAttr = msg.temp_id ? ` data-temp-id="${msg.temp_id}"` : "";
+        const pendingClass = msg.pending ? " pending" : "";
+
+        htmlContent += `
+          <div class="message-item${pendingClass}" data-message-idx="${msgIdx}"${tempAttr}>
+            <span class="message-sender">
+              <span class="message-sender-link" data-username="${userInfo.username}" data-user-id="${msg.sender_id}">
+                ${userInfo.name}
+              </span>:
+            </span>
+            <span class="message-content">${msg.content}</span>
+            <span class="message-timestamp" title="${fullDateTime}">${timeText}</span>
+          </div>
+        `;
       msgIdx++;
     });
   });

@@ -40,6 +40,9 @@ export const messagesPage = async () => {
 
   let currentConversationId = null;
   let unsubscribe = null;
+  let currentMessages = [];
+  let currentConv = null;
+  let currentUserProfilesMap = new Map();
 
   const conversations = await fetchConversations(session.user.id);
   renderConversationList(conversations);
@@ -51,8 +54,8 @@ export const messagesPage = async () => {
       messagesList.innerHTML = `<div class="gh-messages-loading"><svg class="gh-messages-spinner" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" stroke="#0969da"><g fill="none" fill-rule="evenodd"><g transform="translate(2 2)" stroke-width="3"><circle stroke-opacity=".3" cx="18" cy="18" r="18"/><path d="M36 18c0-9.94-8.06-18-18-18"><animateTransform attributeName="transform" type="rotate" from="0 18 18" to="360 18 18" dur="1s" repeatCount="indefinite"/></path></g></g></svg></div>`;
     }
     
-    const messages = await fetchMessages(conversationId);
-    const conv = await getConversationByID(conversationId);
+  const messages = await fetchMessages(conversationId);
+  const conv = await getConversationByID(conversationId);
     
     // Fetch user profiles for all users in the conversation
     const userProfiles = await getUserProfiles(conv.users);
@@ -73,6 +76,10 @@ export const messagesPage = async () => {
         username: profile.user_name
       });
     });
+    // store current state so other handlers can re-render
+    currentMessages = messages;
+    currentConv = conv;
+    currentUserProfilesMap = userProfilesMap;
     
     // Update the header to show the conversation participant
     const headerElement = document.getElementById("message-view-header");
@@ -169,42 +176,41 @@ export const messagesPage = async () => {
       const content = input.value.trim();
       if (!content || !currentConversationId) return;
       
-      // immediately show the message as pending
-      const messagesList = document.getElementById("messages-list");
+      // create a pending message item in the current messages array and re-render
       const tempId = `temp-${Date.now()}`;
-      const pendingMessageHtml = `
-        <div class="message-item pending" data-temp-id="${tempId}">
-          <span class="message-sender">
-            <span class="message-sender-link" data-username="${session.user.user_metadata.user_name}" data-user-id="${session.user.id}">
-              ${session.user.user_metadata.full_name || session.user.user_metadata.user_name || "You"}
-            </span>:
-          </span>
-          <span class="message-content">${content}</span>
-          <span class="message-timestamp">Sending...</span>
-        </div>
-      `;
-      messagesList.insertAdjacentHTML('beforeend', pendingMessageHtml);
-      messagesList.scrollTop = messagesList.scrollHeight;
-      
+      const pendingMessage = {
+        id: null,
+        temp_id: tempId,
+        sender_id: session.user.id,
+        created_at: new Date().toISOString(),
+        content,
+        pending: true,
+      };
+
+      // Ensure we have the latest messages for this conversation
+      if (!currentMessages || currentConv?.id !== currentConversationId) {
+        // fetch fresh state if missing
+        await showMessages(currentConversationId);
+      }
+
+      currentMessages.push(pendingMessage);
+      // render with the pending message (MessagesView will show "Sending...")
+      renderMessages(currentMessages, session.user.id, currentConv, currentUserProfilesMap);
+      // scroll messages list into view
+      const messagesList = document.getElementById("messages-list");
+      if (messagesList) messagesList.scrollTop = messagesList.scrollHeight;
+
       input.value = "";
-      
+
       try {
+        // send to server
         await sendMessage(currentConversationId, session.user.id, content);
-        // update the pending message to delivered state
-        const pendingElement = document.querySelector(`[data-temp-id="${tempId}"]`);
-        if (pendingElement) {
-          pendingElement.classList.remove('pending');
-          const timestampEl = pendingElement.querySelector('.message-timestamp');
-          if (timestampEl) {
-            timestampEl.textContent = new Date().toLocaleTimeString();
-          }
-        }
+        // after successful send, re-fetch messages to get authoritative timestamps and ids
+        await showMessages(currentConversationId);
       } catch (error) {
-        // if sending fails, remove the pending message
-        const pendingElement = document.querySelector(`[data-temp-id="${tempId}"]`);
-        if (pendingElement) {
-          pendingElement.remove();
-        }
+        // if sending fails, remove the pending message and re-render
+        currentMessages = currentMessages.filter(m => m.temp_id !== tempId);
+        renderMessages(currentMessages, session.user.id, currentConv, currentUserProfilesMap);
         console.error("Failed to send message:", error);
       }
     });
