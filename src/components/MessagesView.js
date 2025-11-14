@@ -1,5 +1,5 @@
 import { renderContextMenu } from "./context/Message";
-import { format, isToday, isYesterday, isThisWeek, isThisYear, parseISO } from "date-fns";
+import { format, isToday, isYesterday, isThisWeek, isThisYear, parseISO, startOfDay } from "date-fns";
 import { showCustomAlert } from "../utils";
 
 export function renderMessages(messages, currentUserId, conversation, userProfiles = new Map()) {
@@ -54,7 +54,8 @@ export function renderMessages(messages, currentUserId, conversation, userProfil
 
   // messages grouped by date
   messagesByDate.forEach((dayMessages, dateKey) => {
-    const date = new Date(dateKey);
+    // timezone fix
+    const date = startOfDay(parseISO(dayMessages[0].created_at));
     
     // date separator
     htmlContent += `
@@ -70,7 +71,8 @@ export function renderMessages(messages, currentUserId, conversation, userProfil
       const userInfo = getUserInfo(msg.sender_id);
         const msgDate = parseISO(msg.created_at);
         const fullDateTime = msg.pending ? "" : format(msgDate, "EEEE, MMMM d, yyyy 'at' h:mm:ss a");
-        const timeText = msg.pending ? "Sending..." : new Date(msg.created_at).toLocaleTimeString();
+
+  const timeText = msg.pending ? "Sending..." : format(msgDate, "p");
         const tempAttr = msg.temp_id ? ` data-temp-id="${msg.temp_id}"` : "";
         const pendingClass = msg.pending ? " pending" : "";
 
