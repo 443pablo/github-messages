@@ -1,5 +1,6 @@
 import { renderWelcomeView } from "../components/WelcomeView";
 import { renderChatView } from "../components/ChatView";
+import { renderConversationDetailsView } from "../components/ConversationDetailsView";
 import { supabase } from "../api/supabase";
 import { fetchConversations, startConversation, getConversationByID } from "../api/conversations";
 import { sendMessage, onNewMessage, fetchMessages } from "../api/messages";
@@ -84,17 +85,37 @@ export const messagesPage = async () => {
     // Update the header to show the conversation participant
     const headerElement = document.getElementById("message-view-header");
     if (headerElement) {
+      // remove any existing click listener by cloning
+      const newHeaderElement = headerElement.cloneNode(true);
+      headerElement.parentNode.replaceChild(newHeaderElement, headerElement);
+      
       if (conv.name) {
-        headerElement.textContent = conv.name;
+        newHeaderElement.textContent = conv.name;
       } else {
         const otherUserId = conv.users.find(uid => uid !== session.user.id);
         if (otherUserId && userProfilesMap.has(otherUserId)) {
           const otherUser = userProfilesMap.get(otherUserId);
-          headerElement.textContent = `${otherUser.name}`;
+          newHeaderElement.textContent = `${otherUser.name}`;
         } else {
-          headerElement.textContent = "Messages";
+          newHeaderElement.textContent = "Messages";
         }
       }
+      
+      // make header clickable to show conversation details
+      newHeaderElement.style.cursor = "pointer";
+      newHeaderElement.title = "View conversation details";
+      
+      newHeaderElement.addEventListener("click", () => {
+        renderConversationDetailsView(
+          currentConv,
+          session.user.id,
+          currentUserProfilesMap,
+          () => {
+            // on back, re-render the messages
+            renderMessages(currentMessages, session.user.id, currentConv, currentUserProfilesMap);
+          }
+        );
+      });
     }
     
     renderMessages(messages, session.user.id, conv, userProfilesMap);

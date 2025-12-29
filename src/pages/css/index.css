@@ -154,6 +154,12 @@
 
 .gh-messages-header h3 {
   margin: 0;
+  transition: color 0.2s;
+  user-select: none;
+}
+
+.gh-messages-header h3:hover {
+  color: var(--fgColor-accent, #0969da);
 }
 
 .gh-messages-signout-btn {
@@ -538,4 +544,223 @@
   .gh-messages-user-suggestion:hover {
     background-color: #21262d;
   }
+}
+
+/* conversation details view */
+.gh-conversation-details {
+  padding: 20px;
+  overflow-y: auto;
+  height: 100%;
+  background: var(--bgColor-default, white);
+}
+
+.gh-conversation-details.dark {
+  background: #0d1117;
+  color: #c9d1d9;
+}
+
+.gh-conversation-details-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--borderColor-default, #d0d7de);
+}
+
+.gh-conversation-details.dark .gh-conversation-details-header {
+  border-bottom-color: #30363d;
+}
+
+.gh-conversation-details-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.gh-back-button {
+  background: none;
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  border-radius: 6px;
+  padding: 6px 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fgColor-default, #24292f);
+  transition: all 0.2s;
+}
+
+.gh-back-button:hover {
+  background: var(--bgColor-muted, #f6f8fa);
+}
+
+.gh-conversation-details.dark .gh-back-button {
+  border-color: #30363d;
+  color: #c9d1d9;
+}
+
+.gh-conversation-details.dark .gh-back-button:hover {
+  background: #21262d;
+}
+
+.gh-back-button svg {
+  fill: currentColor;
+}
+
+.gh-conversation-details-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.gh-conversation-details-section {
+  border-bottom: 1px solid var(--borderColor-default, #d0d7de);
+  padding-bottom: 16px;
+}
+
+.gh-conversation-details.dark .gh-conversation-details-section {
+  border-bottom-color: #30363d;
+}
+
+.gh-conversation-details-section:last-child {
+  border-bottom: none;
+}
+
+.gh-conversation-details-section h3 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fgColor-muted, #57606a);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.gh-conversation-name-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.gh-participants-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gh-participant-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.gh-participant-item:hover {
+  background: var(--bgColor-muted, #f6f8fa);
+}
+
+.gh-conversation-details.dark .gh-participant-item:hover {
+  background: #21262d;
+}
+
+.gh-participant-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--borderColor-default, #d0d7de);
+}
+
+.gh-conversation-details.dark .gh-participant-avatar {
+  border-color: #30363d;
+}
+
+.gh-participant-info {
+  flex: 1;
+}
+
+.gh-participant-name {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.gh-participant-you {
+  color: var(--fgColor-muted, #57606a);
+  font-weight: 400;
+  font-size: 13px;
+}
+
+.gh-participant-username {
+  font-size: 13px;
+  color: var(--fgColor-muted, #57606a);
+}
+
+.gh-details-action-btn {
+  background: var(--button-default-bgColor-rest, #f6f8fa);
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--fgColor-default, #24292f);
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.gh-details-action-btn:hover {
+  background: var(--button-default-bgColor-hover, #f3f4f6);
+  border-color: var(--borderColor-emphasis, #afb8c1);
+}
+
+.gh-conversation-details.dark .gh-details-action-btn {
+  background: #21262d;
+  border-color: #30363d;
+  color: #c9d1d9;
+}
+
+.gh-conversation-details.dark .gh-details-action-btn:hover {
+  background: #30363d;
+  border-color: #484f58;
+}
+
+.gh-danger-section {
+  border-bottom-color: transparent !important;
+}
+
+.gh-danger-section .gh-details-action-btn {
+  display: flex;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.gh-danger-btn {
+  color: var(--danger-fgColor, #cf222e) !important;
+  border-color: var(--danger-emphasis, rgba(207, 34, 46, 0.4)) !important;
+}
+
+.gh-danger-btn:hover {
+  background: var(--danger-bgColor-hover, #ffebe9) !important;
+  border-color: var(--danger-emphasis, #cf222e) !important;
+}
+
+.gh-conversation-details.dark .gh-danger-btn {
+  color: #ff7b72 !important;
+  border-color: rgba(255, 123, 114, 0.4) !important;
+}
+
+.gh-conversation-details.dark .gh-danger-btn:hover {
+  background: rgba(255, 123, 114, 0.1) !important;
+  border-color: #ff7b72 !important;
+}
+
+.gh-danger-btn svg {
+  fill: currentColor;
 }
