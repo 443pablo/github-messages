@@ -122,30 +122,7 @@ export const messagesPage = async () => {
   }
 
   document.getElementById("new-conversation-btn").addEventListener("click", async () => {
-    const dummyUsers = [
-      { name: 'John Doe', username: 'johndoe', avatar: 'https://avatars.githubusercontent.com/u/1' },
-      { name: 'Jane Smith', username: 'janesmith', avatar: 'https://avatars.githubusercontent.com/u/2' },
-      { name: 'AI Assistant', username: 'copilot', avatar: 'https://avatars.githubusercontent.com/u/87264559' },
-    ];
-
-    const dummyUsersHtml = dummyUsers.map(user => `
-      <div class="gh-messages-user-suggestion" data-username="${user.username}">
-        <img src="${user.avatar}" class="gh-messages-user-avatar">
-        <div>
-          <div class="gh-messages-user-name">${user.name}</div>
-          <div class="gh-messages-user-username">${user.username}</div>
-        </div>
-      </div>
-    `).join('');
-
-    const suggestionsHtml = `
-      <div class="gh-messages-user-suggestions">
-        <h4>Suggestions</h4>
-        ${dummyUsersHtml}
-      </div>
-    `;
-
-    const username = await showCustomPrompt({ text: "Enter the GitHub username of the user you want to message:", html: suggestionsHtml });
+    const username = await showCustomPrompt({ text: "Enter the GitHub username of the user you want to message:" });
     if (!username) return;
 
     if (username.toLowerCase() === session.user.user_metadata.user_name.toLowerCase()) {

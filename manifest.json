@@ -1,7 +1,7 @@
 {
     "name": "Github Messages",
     "description": "A messaging system for Github. Message anyone on GitHub with ease with a native user interface.",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "manifest_version": 3,
     "action": {
         "default_icon": "./icons/black/16.png"
@@ -19,7 +19,6 @@
         "service_worker": "dist/background.js",
         "type": "module"
     },
-    "omnibox": {"keyword": "gh" },
     "content_scripts": [
         {
             "matches": ["https://github.com/messages","https://github.com/messages/*", "https://github.com/messages*"],
